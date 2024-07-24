@@ -2,8 +2,7 @@ from data import data_loader
 from strategy import strategy_simple
 
 if __name__ == '__main__':
-    s = data_loader.SinaLoader().get_realtime('AU2409')
-    macd = strategy_simple.MACD(12, 26, 9)
-    macd.add_row(s)
-    macd.add_row(s)
-    print(macd.get_df())
+    code = 'AU2409'
+    s = data_loader.SinaLoader().get_realtime(code)
+    strategy_simple.MACD().add_row(s)
+    print(strategy_simple.MACD().get_df(s.get('代码')))

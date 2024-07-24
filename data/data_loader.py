@@ -27,7 +27,8 @@ class SinaLoader:
     @staticmethod
     def realtime_struct(code: str, text: str) -> Dict:
         result = {}
-        body = text[text.find('"'): text.rfind('"')].split(',')
+        body = text[text.find('"')+1: text.rfind('"')].split(',')
+        result['代码'] = code
         # 期货
         if code.startswith('nf_'):
             result['名称'] = body[0]
@@ -80,7 +81,6 @@ class SinaLoader:
             result['卖五价'] = body[29]
             result['日期'] = body[30]
             result['时间'] = body[31]
-
         # 处理数据类型
         for k in result.keys():
             if k[-1:] in ['价', '额']:

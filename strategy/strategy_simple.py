@@ -17,24 +17,37 @@ class MACD:
         if df_key not in self.df_dict:
             self.df_dict[df_key] = pd.DataFrame([row])
         else:
-            self.df_dict[df_key] = self.df_dict[df_key]._append(row, ignore_index=True)
-        MACD().get_golden_cross(self.df_dict[df_key])
+            if self.df_dict[df_key].iloc[-1]['时间'] != row.get('时间'):
+                self.df_dict[df_key] = pd.concat([self.df_dict[df_key], pd.DataFrame([row])])
 
     def get_df(self, df_key: str):
         return self.df_dict.get(df_key)
 
     @staticmethod
-    def get_golden_cross(df, short_period=12, long_period=26, signal_period=9):
-        def calc_ema(x, col, span):
-            x['%s_EMA_%s' % (col, span)] = x[col].ewm(span=span, adjust=False).mean()
+    def get_golden_cross(x, short_period=12, long_period=26, signal_period=9):
+        def calc_ema(xx, col, span):
+            xx['%s_EMA_%s' % (col, span)] = xx[col].ewm(span=span, adjust=False).mean()
 
-        tmp = copy.deepcopy(df)
-        calc_ema(tmp, '最新价', short_period)
-        calc_ema(tmp, '最新价', long_period)
-        tmp['DIF'] = tmp['%s_EMA_%s' % ('最新价', short_period)] - tmp['%s_EMA_%s' % ('最新价', long_period)]
-        calc_ema(tmp, 'DIF', signal_period)
-        tmp['DEA'] = tmp['%s_EMA_%s' % ('DIF', signal_period)]
-        tmp['MACD'] = tmp['DIF'] - tmp['DEA']
-        tmp['golden_cross'] = (tmp['DIF'] < tmp['DEA'].shift(1)) & (tmp['DIF'].shift(-1) > tmp['DEA'].shift(-1))
-        if tmp.iloc[-1]['golden_cross'].tolist():
-            print(tmp.iloc[-1])
+        df = copy.deepcopy(x)
+        # 直接在原DataFrame上操作
+        calc_ema(df, '最新价', short_period)
+        calc_ema(df, '最新价', long_period)
+        df['DIF'] = df['%s_EMA_%s' % ('最新价', short_period)] - df['%s_EMA_%s' % ('最新价', long_period)]
+        calc_ema(df, 'DIF', signal_period)
+        df['DEA'] = df['%s_EMA_%s' % ('DIF', signal_period)]
+        df['MACD'] = df['DIF'] - df['DEA']
+
+        # 金叉逻辑
+        df['golden_cross'] = (df['%s_EMA_%s' % ('最新价', short_period)] > df['%s_EMA_%s' % ('最新价', long_period)]
+                              ) & (df['%s_EMA_%s' % ('最新价', short_period)].shift(1) <= df[
+            '%s_EMA_%s' % ('最新价', long_period)].shift(1))
+        # 死叉逻辑
+        df['death_cross'] = ((df['%s_EMA_%s' % ('最新价', short_period)] < df['%s_EMA_%s' % ('最新价', long_period)]) &
+                             (df['%s_EMA_%s' % ('最新价', short_period)].shift(1) >= df[
+                                 '%s_EMA_%s' % ('最新价', long_period)].shift(1)))
+
+        print([df.iloc[-1]['时间'], df.iloc[-1]['golden_cross'], df.iloc[-1]['death_cross']])
+
+        # # 如果最后一行是黄金交叉，则打印
+        # if df.iloc[-1]['golden_cross'] and df.iloc[-1]['death_cross']:
+        #     print(df.iloc[-1])

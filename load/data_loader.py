@@ -1,5 +1,8 @@
-from typing import Dict
+import datetime
+import os
+from typing import Dict, Callable
 
+import pandas as pd
 import requests
 
 from comm import tool_classes
@@ -27,7 +30,7 @@ class SinaLoader:
     @staticmethod
     def realtime_struct(code: str, text: str) -> Dict:
         result = {}
-        body = text[text.find('"')+1: text.rfind('"')].split(',')
+        body = text[text.find('"') + 1: text.rfind('"')].split(',')
         result['代码'] = code
         # 期货
         if code.startswith('nf_'):
@@ -48,7 +51,7 @@ class SinaLoader:
             result['商品交易所简称'] = body[15]
             result['品种名简称'] = body[16]
             result['日期'] = body[17]
-            result['时间'] = f'{body[1][: 2]}:{body[1][2: 4]}:{body[1][4: ]}'
+            result['时间'] = f'{body[1][: 2]}:{body[1][2: 4]}:{body[1][4:]}'
         # 股票
         if code[:2] in ['sh', 'sz', 'bj']:
             result['名称'] = body[0]
@@ -90,7 +93,7 @@ class SinaLoader:
         return result
 
     @staticmethod
-    def get_realtime(code: str) -> Dict:
+    def realtime_quote(code: str) -> Dict:
         # 获取实时数据
         base_url = 'http://hq.sinajs.cn/list={}'
         header = {
@@ -103,3 +106,35 @@ class SinaLoader:
         result = SinaLoader().realtime_struct(sina_code, response.text)
         # 返回结果
         return result
+
+    @staticmethod
+    def today_min_line(code: str) -> pd.DataFrame:
+        # 请求
+        url = f'https://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20t1nf_{code}=/InnerFuturesNewService.getMinLine?symbol={code}'
+        header = {
+            'user-agent': 'Mozilla/4.0(compatible;MSIE7.0;WindowsNT5.1;360SE)',
+            'Referer': 'https://finance.sina.com.cn/',
+        }
+        response = requests.get(url, headers=header)
+        data = response.text
+        data = [x[:5] for x in eval(data[data.find('=(') + 2: data.rfind(');')])]
+        cols = ['时间', '最新价', '均价', '成交量', '持仓量']
+        result = pd.DataFrame(data, columns=cols)
+        result['日期'] = datetime.datetime.now().strftime('%Y-%m-%d')
+        result['代码'] = SinaLoader().code_transform(code)
+        result = result.astype({
+            '最新价': float,
+            '均价': float,
+            '成交量': int,
+            '持仓量': int,
+        })
+        return result
+
+    @staticmethod
+    def save_line_to_csv(func: Callable, code: str) -> None:
+        df = func(code)
+        if not os.path.exists('data'):
+            os.mkdir('data')
+        target_path = os.path.join('data', f'{code}-{datetime.datetime.now().strftime('%Y-%m-%d')}-{func.__name__}.csv')
+        df.to_csv(target_path, index=False)
+        return None

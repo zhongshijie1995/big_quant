@@ -28,6 +28,12 @@ class MACD:
         # 结束
         return None
 
+    def update_df(self, df: pd.DataFrame) -> None:
+        # 添加一条数据
+        df_key = df.loc[0]['代码']
+        self.df_dict[df_key] = df.copy()
+        return None
+
     def get_df(self, df_key: str):
         return self.df_dict.get(df_key)
 

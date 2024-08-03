@@ -38,7 +38,7 @@ class MACD:
         return self.df_dict.get(df_key)
 
     @staticmethod
-    def get_golden_death_cross(x, short_period=12, long_period=26) -> [pd.DataFrame, pd.DataFrame]:
+    def golden_death_cross(x, short_period=12, long_period=26) -> [pd.DataFrame, pd.DataFrame]:
         def calc_ema(xx, col, span):
             xx['%s_EMA_%s' % (col, span)] = xx[col].ewm(span=span, adjust=False).mean()
 
@@ -49,18 +49,21 @@ class MACD:
         calc_ema(df, '最新价', long_period)
 
         # 金叉逻辑
-        df['golden_cross'] = (
+        df['金叉'] = (
                 (df['%s_EMA_%s' % ('最新价', short_period)] > df['%s_EMA_%s' % ('最新价', long_period)])
                 &
                 (df['%s_EMA_%s' % ('最新价', short_period)].shift(1) <= df['%s_EMA_%s' % ('最新价', long_period)].shift(
                     1))
         )
         # 死叉逻辑
-        df['death_cross'] = (
+        df['死叉'] = (
                 (df['%s_EMA_%s' % ('最新价', short_period)] < df['%s_EMA_%s' % ('最新价', long_period)])
                 &
                 (df['%s_EMA_%s' % ('最新价', short_period)].shift(1) >= df['%s_EMA_%s' % ('最新价', long_period)].shift(
                     1))
         )
-
-        return df[df['golden_cross']], df[df['death_cross']]
+        # 精简数据列
+        df = df[['时间', '代码', '最新价', '金叉', '死叉']]
+        # 过滤有效数据
+        df = df[(df['金叉'] | df['死叉'])]
+        return df

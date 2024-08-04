@@ -1,6 +1,4 @@
-import datetime
-import os
-from typing import Dict, Callable
+from typing import Dict
 
 import pandas as pd
 import requests
@@ -120,8 +118,10 @@ class SinaLoader:
         data = [x[:5] for x in eval(data[data.find('=(') + 2: data.rfind(');')])]
         cols = ['时间', '最新价', '均价', '成交量', '持仓量']
         result = pd.DataFrame(data, columns=cols)
-        result['日期'] = datetime.datetime.now().strftime('%Y-%m-%d')
-        result['代码'] = SinaLoader().code_transform(code)
+        quote_result = SinaLoader().realtime_quote(code)
+        result['日期'] = quote_result['日期']
+        result['代码'] = quote_result['代码']
+        result['名称'] = quote_result['名称']
         result = result.astype({
             '最新价': float,
             '均价': float,
@@ -129,12 +129,3 @@ class SinaLoader:
             '持仓量': int,
         })
         return result
-
-    @staticmethod
-    def save_line_to_csv(func: Callable, code: str) -> None:
-        df = func(code)
-        if not os.path.exists('data'):
-            os.mkdir('data')
-        target_path = os.path.join('data', f'{code}-{datetime.datetime.now().strftime('%Y-%m-%d')}-{func.__name__}.csv')
-        df.to_csv(target_path, index=False)
-        return None

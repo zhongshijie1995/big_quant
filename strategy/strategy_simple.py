@@ -20,13 +20,13 @@ class MACD:
         calc_ema(df, '最新价', long)
 
         # 金叉逻辑
-        df['金叉'] = (
+        df['多'] = (
                 (df['%s_EMA_%s' % ('最新价', short)] > df['%s_EMA_%s' % ('最新价', long)])
                 &
                 (df['%s_EMA_%s' % ('最新价', short)].shift(1) <= df['%s_EMA_%s' % ('最新价', long)].shift(1))
         )
         # 死叉逻辑
-        df['死叉'] = (
+        df['空'] = (
                 (df['%s_EMA_%s' % ('最新价', short)] < df['%s_EMA_%s' % ('最新价', long)])
                 &
                 (df['%s_EMA_%s' % ('最新价', short)].shift(1) >= df['%s_EMA_%s' % ('最新价', long)].shift(1))
@@ -34,7 +34,7 @@ class MACD:
         # 获取名称
         df['名称'] = data_loader.SinaLoader().realtime_quote(df.loc[0]['代码'][-6:])['名称']
         # 精简数据列
-        df = df[['时间', '名称', '最新价', '金叉', '死叉']]
+        df = df[['时间', '名称', '最新价', '多', '空']]
         # 过滤有效数据
-        df = df[(df['金叉'] | df['死叉'])]
+        df = df[(df['多'] | df['空'])]
         return df

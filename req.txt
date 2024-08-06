@@ -2,5 +2,3 @@ requests
 pandas
 loguru
 apscheduler
-git+https://github.com/ctpbee/ctpbee_api
-ctpbee

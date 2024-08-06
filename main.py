@@ -1,6 +1,8 @@
+from comm import tool_log
 from task import collector, holder, executor
 
 if __name__ == '__main__':
+    tool_log.ToolLog.init_logger()
     codes = [
         'SA2409',
         'RM2409',

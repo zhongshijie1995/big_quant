@@ -38,6 +38,7 @@ class Collector:
             tool_scheduler.ToolScheduler().scheduler.add_job(
                 Collector().save_to_csv,
                 'cron', hour='15', minute='00',
-                args=[data_loader.SinaLoader().today_min_line, code]
+                args=[data_loader.SinaLoader().today_min_line, code],
+                max_instances=8,
             )
         return None

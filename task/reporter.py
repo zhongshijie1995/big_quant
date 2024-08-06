@@ -9,7 +9,7 @@ from strategy import strategy_simple
 
 
 @tool_classes.ToolClasses.singleton
-class Executor:
+class Reporter:
     @staticmethod
     def report_macd_chance(code: str):
         data = data_loader.SinaLoader().today_min_line(code)
@@ -32,8 +32,9 @@ class Executor:
         for code in codes:
             for hour_str in hour_str_list:
                 tool_scheduler.ToolScheduler().scheduler.add_job(
-                    Executor().report_macd_chance,
+                    Reporter().report_macd_chance,
                     'cron', hour=hour_str, minute='*',
-                    args=[code]
+                    args=[code],
+                    max_instances=8,
                 )
         return None

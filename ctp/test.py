@@ -1,6 +1,6 @@
+from ctpbee import Action
 from ctpbee import CtpBee, CtpbeeApi
 from ctpbee.constant import *
-from ctpbee import Action
 
 
 class ActionMe(Action):
@@ -14,7 +14,7 @@ class ActionMe(Action):
 class DoubleMA(CtpbeeApi):
     def __init__(self, name):
         super().__init__(name)
-        self.instrument_set = ['rm2409.SHFE']
+        self.instrument_set = ['AU2409.CFFEX']
 
     def on_contract(self, contract: ContractData):
         if contract.local_symbol in self.instrument_set:

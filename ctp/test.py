@@ -14,7 +14,7 @@ class ActionMe(Action):
 class DoubleMA(CtpbeeApi):
     def __init__(self, name):
         super().__init__(name)
-        self.instrument_set = ['AU2409.CFFEX']
+        self.instrument_set = ['rb2409.SHFE']
 
     def on_contract(self, contract: ContractData):
         if contract.local_symbol in self.instrument_set:

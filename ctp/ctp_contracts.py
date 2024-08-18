@@ -2,7 +2,7 @@ from comm import tool_classes
 
 
 @tool_classes.ToolClasses.singleton
-class CtpContract:
+class CtpContracts:
     contracts = [
         'SA501.CZCE',
     ]

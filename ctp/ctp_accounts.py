@@ -2,7 +2,7 @@ from comm import tool_classes
 
 
 @tool_classes.ToolClasses.singleton
-class CtpAccount:
+class CtpAccounts:
     acct_dict = {
         # simnow第一套环境-结算环境
         'simnow-01': {
@@ -37,3 +37,6 @@ class CtpAccount:
             'TD_FUNC': True,
         }
     }
+
+    def get(self, account_name: str):
+        return self.acct_dict.get(account_name)

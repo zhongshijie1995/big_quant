@@ -8,7 +8,7 @@ from comm import tool_classes
 
 
 @tool_classes.ToolClasses.singleton
-class CtpData:
+class CtpTools:
     constants = {
         'TickData': {
             'ask_price_1': '卖一价',
@@ -117,8 +117,8 @@ class CtpData:
 
     @staticmethod
     def obj_to_dict(p_obj: Union[TickData, BarData, OrderData, TradeData, PositionData, ContractData]) -> Dict:
-        maps = CtpData().constants[type(p_obj).__name__]
+        maps = CtpTools().constants[type(p_obj).__name__]
         result = {}
         for k, v in maps.items():
-            CtpData().obj_attr_val_to_dict_key_val(p_obj, result, k, v)
+            CtpTools().obj_attr_val_to_dict_key_val(p_obj, result, k, v)
         return result

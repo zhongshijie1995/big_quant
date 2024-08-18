@@ -1,6 +1,6 @@
 from ctpbee import Action
 
 
-class CtpAction(Action):
+class CtpActions(Action):
     def __init__(self, app):
         super().__init__(app)

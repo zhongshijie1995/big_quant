@@ -35,7 +35,23 @@ class CtpAccounts:
             'INTERFACE': 'ctp',
             'MD_FUNC': True,
             'TD_FUNC': True,
-        }
+        },
+        # 银河期货测试环境
+        'YHQH-test': {
+            'CONNECT_INFO': {
+                'userid': '229875',
+                'password': 'Zsj@19951026',
+                'brokerid': '9999',
+                'md_address': 'tcp://180.168.146.187:10130',
+                'td_address': 'tcp://180.168.146.187:10131',
+                'product_info': '',
+                'appid': 'simnow_client_test',
+                'auth_code': '0000000000000000'
+            },
+            'INTERFACE': 'ctp_se',
+            'MD_FUNC': True,
+            'TD_FUNC': True,
+        },
     }
 
     def get(self, account_name: str):

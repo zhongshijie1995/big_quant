@@ -19,7 +19,7 @@ class LogTick(CtpbeeApi):
         data = ctp_tools.CtpTools().obj_to_dict(contract)
         contract_name = data.get('合约名称')
         if contract_name in self.instrument_set:
-            logger.info(f'订阅{contract_name}-{contract.local_symbol}')
+            logger.info(f'订阅[{contract_name}]-[{contract.local_symbol}]')
             self.action.subscribe(contract.local_symbol)
 
     def on_tick(self, tick: TickData) -> None:

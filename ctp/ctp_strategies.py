@@ -19,6 +19,9 @@ class LogTick(CtpbeeApi):
             self.action.subscribe(contract.local_symbol)
 
     def on_tick(self, tick: TickData) -> None:
+        data = ctp_tools.CtpTools().obj_to_dict(tick)
+        data = {k: v for k, v in data.items() if v is not None}
+        logger.info(f'{data}')
         logger.info(f'{ctp_tools.CtpTools().obj_to_dict(tick)}')
 
 

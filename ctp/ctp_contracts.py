@@ -5,4 +5,5 @@ from comm import tool_classes
 class CtpContracts:
     contracts = [
         'SA501.CZCE',
+        'RM501.CZCE',
     ]

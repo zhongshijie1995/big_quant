@@ -39,16 +39,16 @@ class CtpAccounts:
         # 银河期货测试环境
         'YHQH-test': {
             'CONNECT_INFO': {
-                'userid': '229875',
-                'password': 'Zsj@19951026',
-                'brokerid': '9999',
-                'md_address': 'tcp://180.168.146.187:10130',
-                'td_address': 'tcp://180.168.146.187:10131',
+                'userid': '10000007',
+                'password': 'abc@123456',
+                'brokerid': '1010',
+                'md_address': 'tcp://106.37.101.162:31213',
+                'td_address': 'tcp://106.37.101.162:31205',
                 'product_info': '',
-                'appid': 'simnow_client_test',
-                'auth_code': '0000000000000000'
+                'appid': 'client_zhongshijie_1.0.0',
+                'auth_code': 'YHQHYHQHYHQHYHQH'
             },
-            'INTERFACE': 'ctp_se',
+            'INTERFACE': 'ctp',
             'MD_FUNC': True,
             'TD_FUNC': True,
         },

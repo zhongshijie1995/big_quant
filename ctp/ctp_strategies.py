@@ -26,3 +26,4 @@ class LogTick(CtpbeeApi):
         data = ctp_tools.CtpTools().obj_to_dict(tick)
         data = {k: v for k, v in data.items() if v is not None}
         tool_record.ToolRecord().append_to_date_file(str(data))
+        logger.info(data)

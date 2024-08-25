@@ -35,11 +35,11 @@ class CtpTools:
             'bid_price_3': '买价3',
             'bid_price_4': '买价4',
             'bid_price_5': '买价5',
-            'ask_price_1': '买价1',
-            'ask_price_2': '买价2',
-            'ask_price_3': '买价3',
-            'ask_price_4': '买价4',
-            'ask_price_5': '买价5',
+            'ask_price_1': '卖价1',
+            'ask_price_2': '卖价2',
+            'ask_price_3': '卖价3',
+            'ask_price_4': '卖价4',
+            'ask_price_5': '卖价5',
             'bid_volume_1': '买量1',
             'bid_volume_2': '买量2',
             'bid_volume_3': '买量3',
@@ -132,4 +132,58 @@ class CtpTools:
         result = {}
         for k, v in maps.items():
             CtpTools().obj_attr_val_to_dict_key_val(p_obj, result, k, v)
+        return result
+
+    @staticmethod
+    def parse_detail(last_tick: Dict, now_tick: Dict) -> Dict:
+        result = {}
+        result['现手'] = now_tick['成交量'] - last_tick['成交量']
+        result['增仓'] = now_tick['持仓量'] - last_tick['持仓量']
+        # 性质
+        if result['现手'] == result['增仓'] > 0:
+            result['性质'] = '双开'
+        elif result['现手'] > result['增仓'] > 0:
+            result['性质'] = '开仓'
+        elif result['现手'] > (- result['增仓']) > 0:
+            result['性质'] = '平仓'
+        elif result['现手'] > result['增仓'] == 0:
+            result['性质'] = '换手'
+        elif result['现手'] + result['增仓'] == 0:
+            result['性质'] = '双平'
+        else:
+            result['性质'] = '未知'
+        # 方向
+        if now_tick['最新价'] >= last_tick['卖价1']:
+            result['方向'] = '向上'
+        elif now_tick['最新价'] <= last_tick['买价1']:
+            result['方向'] = '向下'
+        elif now_tick['最新价'] >= now_tick['卖价1']:
+            result['方向'] = '向上'
+        elif now_tick['最新价'] <= now_tick['买价1']:
+            result['方向'] = '向上'
+        else:
+            result['方向'] = '不变'
+        # 汇总
+        if result['性质'] == '换手' and result['方向'] == '向上':
+            result['汇总'] = '多换-↑'
+        elif result['性质'] == '换手' and result['方向'] == '向下':
+            result['汇总'] = '空换-↓'
+        elif result['性质'] == '双开' and result['方向'] == '向上':
+            result['汇总'] = '双开-↑'
+        elif result['性质'] == '双开' and result['方向'] == '向下':
+            result['汇总'] = '双开-↓'
+        elif result['性质'] == '平仓' and result['方向'] == '向上':
+            result['汇总'] = '空平-↑'
+        elif result['性质'] == '平仓' and result['方向'] == '向下':
+            result['汇总'] = '多平-↓'
+        elif result['性质'] == '开仓' and result['方向'] == '向上':
+            result['汇总'] = '多开-↑'
+        elif result['性质'] == '开仓' and result['方向'] == '向下':
+            result['汇总'] = '空开-↓'
+        elif result['性质'] == '双平' and result['方向'] == '向上':
+            result['汇总'] = '双平-↑'
+        elif result['性质'] == '双平' and result['方向'] == '向下':
+            result['汇总'] = '双平-↓'
+        else:
+            result['汇总'] = '未知'
         return result

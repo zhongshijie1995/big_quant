@@ -186,4 +186,7 @@ class CtpTools:
             result['汇总'] = '双平-↓'
         else:
             result['汇总'] = '未知'
+        # 整理汇总信息
+        if result['汇总'] != '未知':
+            result['汇总'] += f'-{result["现手"]}-{int(result["增仓"])}'
         return result

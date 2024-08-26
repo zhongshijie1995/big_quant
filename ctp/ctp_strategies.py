@@ -33,5 +33,7 @@ class LogTick(CtpbeeApi):
             detail = ctp_tools.CtpTools().parse_detail(self.tmp_tick_dict[the_code], data.copy())
             data['明细'] = detail['汇总']
         self.tmp_tick_dict[the_code] = data
+        # 记录历史文件
         tool_record.ToolRecord().append_to_date_file(str(data))
+        # 打印日志
         logger.info(data)

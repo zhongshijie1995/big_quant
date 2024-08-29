@@ -24,18 +24,21 @@ class ParseTickBase(CtpbeeApi):
             self.action.subscribe(contract.local_symbol)
 
     def on_tick(self, tick: TickData) -> None:
-        # 解析Tick数据
-        data = ctp_tools.CtpTools().parse_tick(tick)
-        # 打印报价
-        price_msg = ctp_books.CtpBooks().query(data['代码'], -1)[0]
-        msg = {
-            '品种名': price_msg.get('品种名'),
-            '买1': f'{price_msg["买价1"]}:{price_msg["买量1"]}',
-            '卖1': f'{price_msg["卖价1"]}:{price_msg["卖量1"]}',
-            '最新价': price_msg.get('最新价'),
-            '明细': price_msg.get('明细'),
-        }
-        logger.info(msg)
+        try:
+            # 解析Tick数据
+            data = ctp_tools.CtpTools().parse_tick(tick)
+            # 打印报价
+            price_msg = ctp_books.CtpBooks().query(data['代码'], -1)[0]
+            msg = {
+                '品种名': price_msg.get('品种名'),
+                '买1': f'{price_msg["买价1"]}:{price_msg["买量1"]}',
+                '卖1': f'{price_msg["卖价1"]}:{price_msg["卖量1"]}',
+                '最新价': price_msg.get('最新价'),
+                '明细': price_msg.get('明细'),
+            }
+            logger.info(msg)
+        except Exception as e:
+            logger.error(e)
 
 
 class MacdCross(ParseTickBase):

@@ -33,5 +33,8 @@ class CtpBooks:
             return []
         return data[start:end]
 
+    def keys(self) -> List[str]:
+        return list(self.books.keys())
+
     def reset(self):
         self.books.clear()

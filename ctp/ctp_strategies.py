@@ -6,6 +6,7 @@ from loguru import logger
 
 from ctp import ctp_books
 from ctp import ctp_tools
+from indicator import indicator_prices
 
 
 class ParseTickBase(CtpbeeApi):
@@ -15,18 +16,19 @@ class ParseTickBase(CtpbeeApi):
             contracts = []
         self.instrument_set = contracts
 
+    @staticmethod
+    def parse_tick(tick: TickData) -> Dict:
+        data = ctp_tools.CtpTools().obj_to_dict(tick)
+        data = {k: v for k, v in data.items() if v is not None}
+        ctp_books.CtpBooks().append(data['代码'], data)
+        return data
+
     def on_contract(self, contract: ContractData):
         data = ctp_tools.CtpTools().obj_to_dict(contract)
         contract_name = data.get('合约名称')
         if contract_name in self.instrument_set:
             logger.info(f'订阅[{contract_name}]-[{contract.local_symbol}]')
             self.action.subscribe(contract.local_symbol)
-
-    def parse_tick(self, tick: TickData) -> Dict:
-        data = ctp_tools.CtpTools().obj_to_dict(tick)
-        data = {k: v for k, v in data.items() if v is not None}
-        ctp_books.CtpBooks().append(data['代码'], data)
-        return data
 
     def on_tick(self, tick: TickData) -> None:
         # 解析Tick数据
@@ -41,3 +43,15 @@ class ParseTickBase(CtpbeeApi):
             '明细': price_msg.get('明细'),
         }
         logger.info(msg)
+
+
+class MacdCross(ParseTickBase):
+
+    def on_realtime(self):
+        # 对账本的所有数据逐个进行监控
+        for key in ctp_books.CtpBooks().keys():
+            prices = [x['最新价'] for x in ctp_books.CtpBooks().query(key) if str(x['时间']).endswith('.0')]
+            macd_cross_result = indicator_prices.IndicatorPrices().macd_cross(prices)
+            reports = [k for k, v in macd_cross_result.items() if v]
+            if len(reports) > 0:
+                logger.info(f'{key}: {reports}')

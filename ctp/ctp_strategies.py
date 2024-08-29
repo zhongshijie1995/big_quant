@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List
 
 from ctpbee import CtpbeeApi
 from ctpbee.constant import ContractData, TickData
@@ -16,13 +16,6 @@ class ParseTickBase(CtpbeeApi):
             contracts = []
         self.instrument_set = contracts
 
-    @staticmethod
-    def parse_tick(tick: TickData) -> Dict:
-        data = ctp_tools.CtpTools().obj_to_dict(tick)
-        data = {k: v for k, v in data.items() if v is not None}
-        ctp_books.CtpBooks().append(data['代码'], data)
-        return data
-
     def on_contract(self, contract: ContractData):
         data = ctp_tools.CtpTools().obj_to_dict(contract)
         contract_name = data.get('合约名称')
@@ -32,7 +25,7 @@ class ParseTickBase(CtpbeeApi):
 
     def on_tick(self, tick: TickData) -> None:
         # 解析Tick数据
-        data = self.parse_tick(tick)
+        data = ctp_tools.CtpTools().parse_tick(tick)
         # 打印报价
         price_msg = ctp_books.CtpBooks().query(data['代码'], -1)[0]
         msg = {

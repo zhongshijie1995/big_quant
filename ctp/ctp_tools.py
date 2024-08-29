@@ -5,6 +5,7 @@ from ctpbee.constant import TickData, BarData, OrderData, TradeData, PositionDat
 from loguru import logger
 
 from comm import tool_classes
+from ctp import ctp_books
 
 
 @tool_classes.ToolClasses.singleton
@@ -190,3 +191,10 @@ class CtpTools:
         if result['汇总'] != '未知':
             result['汇总'] += f'-{result["现手"]}-{int(result["增仓"])}'
         return result
+
+    @staticmethod
+    def parse_tick(tick: TickData) -> Dict:
+        data = CtpTools().obj_to_dict(tick)
+        data = {k: v for k, v in data.items() if v is not None}
+        ctp_books.CtpBooks().append(data['代码'], data)
+        return data

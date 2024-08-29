@@ -4,20 +4,16 @@ from ctpbee import CtpbeeApi
 from ctpbee.constant import ContractData, TickData
 from loguru import logger
 
-from comm import tool_record
+from ctp import ctp_books
 from ctp import ctp_tools
 
 
 class ParseTickBase(CtpbeeApi):
-    class TicksBook:
-        book = {}
-
     def __init__(self, contracts: List[str] = None):
         super().__init__(self.__class__.__name__)
         if contracts is None:
             contracts = []
         self.instrument_set = contracts
-        self.tmp_tick_dict = {}
 
     def on_contract(self, contract: ContractData):
         data = ctp_tools.CtpTools().obj_to_dict(contract)
@@ -29,17 +25,19 @@ class ParseTickBase(CtpbeeApi):
     def parse_tick(self, tick: TickData) -> Dict:
         data = ctp_tools.CtpTools().obj_to_dict(tick)
         data = {k: v for k, v in data.items() if v is not None}
-        the_code = data['代码']
-        if the_code in self.tmp_tick_dict:
-            detail = ctp_tools.CtpTools().parse_detail(self.tmp_tick_dict[the_code], data.copy())
-            data['明细'] = detail['汇总']
-        self.tmp_tick_dict[the_code] = data
+        ctp_books.CtpBooks().append(data['代码'], data)
         return data
 
     def on_tick(self, tick: TickData) -> None:
         # 解析Tick数据
         data = self.parse_tick(tick)
-        # 记录历史文件
-        tool_record.ToolRecord().append_to_date_file(str(data))
-        # 打印日志
-        logger.info(data)
+        # 打印报价
+        price_msg = ctp_books.CtpBooks().query(data['代码'], -1)[0]
+        msg = {
+            '品种名': price_msg.get('品种名'),
+            '买1': f'{price_msg["买价1"]}:{price_msg["买量1"]}',
+            '卖1': f'{price_msg["卖价1"]}:{price_msg["卖量1"]}',
+            '最新价': price_msg.get('最新价'),
+            '明细': price_msg.get('明细'),
+        }
+        logger.info(msg)

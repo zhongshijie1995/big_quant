@@ -135,7 +135,7 @@ class CtpTools:
         return result
 
     @staticmethod
-    def parse_detail(last_tick: Dict, now_tick: Dict) -> Dict:
+    def parse_detail(last_tick: Dict[str, Any], now_tick: Dict[str, Any]) -> Dict:
         result = {}
         result['现手'] = now_tick['成交量'] - last_tick['成交量']
         result['增仓'] = now_tick['持仓量'] - last_tick['持仓量']

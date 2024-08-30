@@ -7,7 +7,7 @@ from ctp import ctp_tools
 @tool_classes.ToolClasses.singleton
 class CtpBooks:
 
-    def __init__(self, max_len: int = 100):
+    def __init__(self, max_len: int = 3600):
         self.max_len: int = max_len
         self.books: Dict[str, List[Dict[str, Any]]] = {}
 

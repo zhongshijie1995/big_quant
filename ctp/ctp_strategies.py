@@ -46,7 +46,9 @@ class MacdCross(ParseTickBase):
     def on_realtime(self):
         # 对账本的所有数据逐个进行监控
         for key in ctp_books.CtpBooks().keys():
-            prices = [x['最新价'] for x in ctp_books.CtpBooks().query(key) if str(x['时间']).endswith('.0')]
+            prices = [x['最新价'] for x in ctp_books.CtpBooks().query(key) if str(x['时间']).endswith('00.0')]
+            if len(prices) == 0:
+                continue
             macd_cross_result = indicator_prices.IndicatorPrices().macd_cross(prices)
             reports = [k for k, v in macd_cross_result.items() if v]
             if len(reports) > 0:

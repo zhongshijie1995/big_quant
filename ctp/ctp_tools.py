@@ -116,8 +116,6 @@ class CtpTools:
     def obj_attr_val_to_dict_key_val(p_obj: Any, p_dict: Dict, attr_name: str, key_name: str) -> Dict:
         try:
             p_dict[key_name] = eval(f'p_obj.{attr_name}')
-            if p_dict[key_name] == 1.7976931348623157e+308:
-                p_dict[key_name] = None
             if key_name == '时间':
                 p_dict[key_name] = p_dict[key_name].strftime('%Y-%m-%d %H:%M:%S.%f')[:-5]
             if key_name == '交易所':

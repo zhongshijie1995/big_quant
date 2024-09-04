@@ -1,3 +1,4 @@
+import traceback
 from typing import List
 
 from ctpbee import CtpbeeApi
@@ -38,7 +39,7 @@ class ParseTickBase(CtpbeeApi):
             }
             logger.info(msg)
         except Exception as e:
-            logger.error(e)
+            logger.error(f'{e}-[{traceback.format_exc()}]')
 
 
 class MacdCross(ParseTickBase):

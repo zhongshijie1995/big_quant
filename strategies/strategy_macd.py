@@ -52,11 +52,13 @@ class StrategiesMacd(CtpbeeApi):
                 self.ui_dict[f'{price_frame}'].pack(side=tk.TOP, fill=tk.X)
                 # 明细
                 detail_frame = 'contract_detail_frame'
-                self.ui_dict[f'{detail_frame}.{contract}'] = tk.Text(self.ui_dict[tab], state=tk.DISABLED)
+                self.ui_dict[f'{detail_frame}.{contract}'] = tk.Text(self.ui_dict[tab], state=tk.DISABLED, width=35,
+                                                                     height=10)
                 self.ui_dict[f'{detail_frame}.{contract}'].pack(side=tk.TOP, fill=tk.X)
                 # 策略提示
                 strategy_frame = 'contract_strategy_frame'
-                self.ui_dict[f'{strategy_frame}.{contract}'] = tk.Text(self.ui_dict[tab], state=tk.DISABLED)
+                self.ui_dict[f'{strategy_frame}.{contract}'] = tk.Text(self.ui_dict[tab], state=tk.DISABLED, width=35,
+                                                                       height=10)
                 self.ui_dict[f'{strategy_frame}.{contract}'].pack(side=tk.BOTTOM, fill=tk.X)
                 # ------------ 载入页面 ------------
                 self.ui_dict[notebook].add(self.ui_dict[tab], text=contract)
@@ -96,9 +98,9 @@ class StrategiesMacd(CtpbeeApi):
         # 每日盘前
         if now_datetime.endswith('20:50:00'):
             for contract in self.instrument_set:
-                text_key = f'contract_strategy.{contract}.明细'
+                text_key = f'contract_detail_frame.{contract}'
                 self.clear_text(text_key)
-                text_key = f'contract_strategy.{contract}.策略'
+                text_key = f'contract_strategy_frame.{contract}'
                 self.clear_text(text_key)
         # 每分钟
         if now_datetime.endswith('00'):
@@ -120,7 +122,7 @@ class StrategiesMacd(CtpbeeApi):
         return now_datetime
 
     def update_price(self, contract: str, price: str):
-        text_key = f'contract_price_frame.{contract}.买1'
+        text_key = f'contract_price_frame.{contract}'
         self.ui_dict[text_key].config(text=price)
 
     def update_position(self, contract: str, buy: str, sell: str):
@@ -136,7 +138,7 @@ class StrategiesMacd(CtpbeeApi):
         self.tkinter_root.update()
 
     def update_strategy(self, contract: str, strategy: str):
-        text_key = f'contract_strategy.{contract}.策略'
+        text_key = f'contract_strategy_frame.{contract}'
         self.ui_dict[text_key].insert(tk.END, strategy + '\n')
         self.tkinter_root.update()
 

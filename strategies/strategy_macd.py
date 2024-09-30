@@ -52,13 +52,11 @@ class StrategiesMacd(CtpbeeApi):
                 self.ui_dict[f'{price_frame}'].pack(side=tk.TOP, fill=tk.X)
                 # 明细
                 detail_frame = 'contract_detail_frame'
-                self.ui_dict[f'{detail_frame}.{contract}'] = tk.Text(self.ui_dict[tab], state=tk.DISABLED, width=35,
-                                                                     height=10)
+                self.ui_dict[f'{detail_frame}.{contract}'] = tk.Text(self.ui_dict[tab], width=35, height=10)
                 self.ui_dict[f'{detail_frame}.{contract}'].pack(side=tk.TOP, fill=tk.X)
                 # 策略提示
                 strategy_frame = 'contract_strategy_frame'
-                self.ui_dict[f'{strategy_frame}.{contract}'] = tk.Text(self.ui_dict[tab], state=tk.DISABLED, width=35,
-                                                                       height=10)
+                self.ui_dict[f'{strategy_frame}.{contract}'] = tk.Text(self.ui_dict[tab], width=35, height=10)
                 self.ui_dict[f'{strategy_frame}.{contract}'].pack(side=tk.BOTTOM, fill=tk.X)
                 # ------------ 载入页面 ------------
                 self.ui_dict[notebook].add(self.ui_dict[tab], text=contract)
@@ -79,8 +77,8 @@ class StrategiesMacd(CtpbeeApi):
             price_msg = ctp_books.CtpBooks().query(data['代码'], -1)[0]
             msg = {
                 '品种名': price_msg.get('品种名'),
-                '买1': f'{price_msg["买价1"]}->{price_msg["买量1"]}',
-                '卖1': f'{price_msg["卖量1"]}<-{price_msg["卖价1"]}',
+                '买1': f'{price_msg["买价1"]}  ->  {price_msg["买量1"]}',
+                '卖1': f'{price_msg["卖量1"]}  <-  {price_msg["卖价1"]}',
                 '最新价': price_msg.get('最新价'),
                 '明细': price_msg.get('明细'),
             }
@@ -107,13 +105,15 @@ class StrategiesMacd(CtpbeeApi):
             # 对账本的所有数据逐个进行监控，报出MACD策略
             for key in ctp_books.CtpBooks().keys():
                 prices = [x['最新价'] for x in ctp_books.CtpBooks().query(key) if str(x['时间']).endswith('00.0')]
+                logger.info(f'{key}-MACD计算-包含长度[{len(prices)}]')
                 if len(prices) == 0:
                     continue
                 macd_cross_result = indicator_prices.IndicatorPrices().macd_cross(prices)
                 reports = [k for k, v in macd_cross_result.items() if v]
-                if len(reports) > 0:
-                    self.update_strategy(key, reports[-1], )
-                    logger.info(f'{key}: {reports}')
+                if len(reports) == 0:
+                    continue
+                self.update_strategy(key, f'{now_datetime}-{reports[-1]}')
+                logger.info(f'{key}: {reports}')
 
     def update_datetime(self):
         now_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -134,12 +134,18 @@ class StrategiesMacd(CtpbeeApi):
 
     def update_detail(self, contract: str, detail: str):
         text_key = f'contract_detail_frame.{contract}'
+        if detail is None:
+            detail = ''
         self.ui_dict[text_key].insert(tk.END, detail + '\n')
+        self.ui_dict[text_key].see(tk.END)
         self.tkinter_root.update()
 
     def update_strategy(self, contract: str, strategy: str):
         text_key = f'contract_strategy_frame.{contract}'
+        if strategy is None:
+            strategy = ''
         self.ui_dict[text_key].insert(tk.END, strategy + '\n')
+        self.ui_dict[text_key].see(tk.END)
         self.tkinter_root.update()
 
     def clear_text(self, clear_text_key: str):

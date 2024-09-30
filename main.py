@@ -17,11 +17,11 @@ def create_ctpbee_app(act_config_path: str, strategy: CtpbeeApi) -> CtpBee:
 
 if __name__ == '__main__':
     # 账户信息配置文件
-    act_config_path = './config/accounts/act_simnow_2.json'
+    act_config_path = './config/accounts/act_simnow_1.json'
     # 自选信息配置文件
     contract_path = './config/contracts/fav.txt'
     with open(contract_path, 'r') as f:
-        contracts = [x.strip() for x in f.readlines()]
+        contracts = [x.strip() for x in f.readlines() if not x.startswith('#')]
     # 策略配置代码
     strategy = StrategiesMacd(contracts, True)
     # 启动服务

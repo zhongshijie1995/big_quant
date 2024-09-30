@@ -52,24 +52,20 @@ class StrategiesMacd(CtpbeeApi):
                 self.widgets[f'{f_position}'].pack(side=tk.TOP, fill=tk.X)
                 # 明细
                 f_detail = 'contract_detail_frame'
-                self.widgets[f'{f_detail}.{contract}'] = tk.Text(self.widgets[tab], state=tk.DISABLED, width=35,
-                                                                     height=10)
-                self.widgets[f'{f_detail}.{contract}'].pack(side=tk.TOP, fill=tk.X)
-                detail_frame = 'contract_detail_frame'
-                self.ui_dict[detail_frame] = tk.Frame(self.ui_dict[tab])
-                self.ui_dict[f'{detail_frame}.{contract}.多'] = tk.Text(self.ui_dict[detail_frame], width=17, height=10)
-                self.ui_dict[f'{detail_frame}.{contract}.多'].pack(side=tk.LEFT, fill=tk.X)
-                self.ui_dict[f'{detail_frame}.{contract}.空'] = tk.Text(self.ui_dict[detail_frame], width=17, height=10)
-                self.ui_dict[f'{detail_frame}.{contract}.空'].pack(side=tk.RIGHT, fill=tk.X)
-                self.ui_dict[f'{detail_frame}'].pack(side=tk.TOP, fill=tk.X)
+                self.widgets[f_detail] = tk.Frame(self.widgets[tab])
+                self.widgets[f'{f_detail}.{contract}.多'] = tk.Text(self.widgets[f_detail], width=17, height=10)
+                self.widgets[f'{f_detail}.{contract}.多'].pack(side=tk.LEFT, fill=tk.X)
+                self.widgets[f'{f_detail}.{contract}.空'] = tk.Text(self.widgets[f_detail], width=17, height=10)
+                self.widgets[f'{f_detail}.{contract}.空'].pack(side=tk.RIGHT, fill=tk.X)
+                self.widgets[f'{f_detail}'].pack(side=tk.TOP, fill=tk.X)
                 # 策略提示
                 f_strategy = 'contract_strategy_frame'
                 self.widgets[f'{f_strategy}.{contract}'] = tk.Text(self.widgets[tab], state=tk.DISABLED, width=35,
                                                                        height=10)
                 self.widgets[f'{f_strategy}.{contract}'].pack(side=tk.BOTTOM, fill=tk.X)
                 strategy_frame = 'contract_strategy_frame'
-                self.ui_dict[f'{strategy_frame}.{contract}'] = tk.Text(self.ui_dict[tab], width=35, height=10)
-                self.ui_dict[f'{strategy_frame}.{contract}'].pack(side=tk.BOTTOM, fill=tk.X)
+                self.widgets[f'{strategy_frame}.{contract}'] = tk.Text(self.widgets[tab], width=35, height=10)
+                self.widgets[f'{strategy_frame}.{contract}'].pack(side=tk.BOTTOM, fill=tk.X)
                 # ------------ 载入页面 ------------
                 self.widgets[notebook].add(self.widgets[tab], text=contract)
             self.widgets[notebook].pack(side=tk.BOTTOM, fill=tk.X)
@@ -153,8 +149,8 @@ class StrategiesMacd(CtpbeeApi):
         detail_type = {'↑': '多', '↓': '空'}.get(detail.split('-')[1])
         text_key = f'contract_detail_frame.{contract}.{detail_type}'
         # TODO 绘制多空能量柱
-        self.ui_dict[text_key].insert(tk.END, f'{detail}\n')
-        self.ui_dict[text_key].see(tk.END)
+        self.widgets[text_key].insert(tk.END, f'{detail}\n')
+        self.widgets[text_key].see(tk.END)
         self.tkinter_root.update()
 
     def update_strategy(self, contract: str, strategy: str):
@@ -162,8 +158,7 @@ class StrategiesMacd(CtpbeeApi):
             strategy = ''
         text_key = f'contract_strategy_frame.{contract}'
         self.widgets[text_key].insert(tk.END, strategy + '\n')
-        self.ui_dict[text_key].insert(tk.END, strategy + '\n')
-        self.ui_dict[text_key].see(tk.END)
+        self.widgets[text_key].see(tk.END)
         self.tkinter_root.update()
 
     def clear_text(self, clear_text_key: str):

@@ -26,31 +26,35 @@ class StrategiesMacd(CtpbeeApi):
             self.tkinter_root = tk.Tk()
             self.tkinter_root.title('big_quant')
             # 为界面准备UI
-            self.ui_dict = {}
+            self.widgets = {}
             # 添加时间栏
             datetime_frame = '日期时间'
-            self.ui_dict[datetime_frame] = tk.Label(self.tkinter_root, text='日期时间')
-            self.ui_dict[datetime_frame].pack(side=tk.TOP, fill=tk.X)
+            self.widgets[datetime_frame] = tk.Label(self.tkinter_root, text='日期时间')
+            self.widgets[datetime_frame].pack(side=tk.TOP, fill=tk.X)
             # 添加合约
             notebook = 'contract_notebook'
-            self.ui_dict[notebook] = ttk.Notebook(self.tkinter_root)
+            self.widgets[notebook] = ttk.Notebook(self.tkinter_root)
             for contract in contracts:
                 # ------------ 创建页面 ------------
                 tab = 'contract_frame'
-                self.ui_dict[tab] = tk.Frame(self.ui_dict[notebook])
+                self.widgets[tab] = tk.Frame(self.widgets[notebook])
                 # 现价
-                price_frame = 'contract_price_frame'
-                self.ui_dict[f'{price_frame}.{contract}'] = tk.Label(self.ui_dict[tab], text='现价')
-                self.ui_dict[f'{price_frame}.{contract}'].pack(side=tk.TOP, fill=tk.X)
+                f_price = 'contract_price_frame'
+                self.widgets[f'{f_price}.{contract}'] = tk.Label(self.widgets[tab], text='现价')
+                self.widgets[f'{f_price}.{contract}'].pack(side=tk.TOP, fill=tk.X)
                 # 盘口
-                price_frame = 'contract_position_frame'
-                self.ui_dict[price_frame] = tk.Frame(self.ui_dict[tab])
-                self.ui_dict[f'{price_frame}.{contract}.买1'] = tk.Label(self.ui_dict[price_frame], text='买1')
-                self.ui_dict[f'{price_frame}.{contract}.买1'].pack(side=tk.LEFT)
-                self.ui_dict[f'{price_frame}.{contract}.卖1'] = tk.Label(self.ui_dict[price_frame], text='卖1')
-                self.ui_dict[f'{price_frame}.{contract}.卖1'].pack(side=tk.RIGHT)
-                self.ui_dict[f'{price_frame}'].pack(side=tk.TOP, fill=tk.X)
+                f_position = 'contract_position_frame'
+                self.widgets[f_position] = tk.Frame(self.widgets[tab])
+                self.widgets[f'{f_position}.{contract}.买1'] = tk.Label(self.widgets[f_position], text='买1')
+                self.widgets[f'{f_position}.{contract}.买1'].pack(side=tk.LEFT)
+                self.widgets[f'{f_position}.{contract}.卖1'] = tk.Label(self.widgets[f_position], text='卖1')
+                self.widgets[f'{f_position}.{contract}.卖1'].pack(side=tk.RIGHT)
+                self.widgets[f'{f_position}'].pack(side=tk.TOP, fill=tk.X)
                 # 明细
+                f_detail = 'contract_detail_frame'
+                self.widgets[f'{f_detail}.{contract}'] = tk.Text(self.widgets[tab], state=tk.DISABLED, width=35,
+                                                                     height=10)
+                self.widgets[f'{f_detail}.{contract}'].pack(side=tk.TOP, fill=tk.X)
                 detail_frame = 'contract_detail_frame'
                 self.ui_dict[detail_frame] = tk.Frame(self.ui_dict[tab])
                 self.ui_dict[f'{detail_frame}.{contract}.多'] = tk.Text(self.ui_dict[detail_frame], width=17, height=10)
@@ -59,12 +63,16 @@ class StrategiesMacd(CtpbeeApi):
                 self.ui_dict[f'{detail_frame}.{contract}.空'].pack(side=tk.RIGHT, fill=tk.X)
                 self.ui_dict[f'{detail_frame}'].pack(side=tk.TOP, fill=tk.X)
                 # 策略提示
+                f_strategy = 'contract_strategy_frame'
+                self.widgets[f'{f_strategy}.{contract}'] = tk.Text(self.widgets[tab], state=tk.DISABLED, width=35,
+                                                                       height=10)
+                self.widgets[f'{f_strategy}.{contract}'].pack(side=tk.BOTTOM, fill=tk.X)
                 strategy_frame = 'contract_strategy_frame'
                 self.ui_dict[f'{strategy_frame}.{contract}'] = tk.Text(self.ui_dict[tab], width=35, height=10)
                 self.ui_dict[f'{strategy_frame}.{contract}'].pack(side=tk.BOTTOM, fill=tk.X)
                 # ------------ 载入页面 ------------
-                self.ui_dict[notebook].add(self.ui_dict[tab], text=contract)
-            self.ui_dict[notebook].pack(side=tk.BOTTOM, fill=tk.X)
+                self.widgets[notebook].add(self.widgets[tab], text=contract)
+            self.widgets[notebook].pack(side=tk.BOTTOM, fill=tk.X)
 
     def on_contract(self, contract: ContractData):
         data = ctp_tools.CtpTools().obj_to_dict(contract)
@@ -109,7 +117,6 @@ class StrategiesMacd(CtpbeeApi):
             # 对账本的所有数据逐个进行监控，报出MACD策略
             for key in ctp_books.CtpBooks().keys():
                 prices = [x['最新价'] for x in ctp_books.CtpBooks().query(key) if str(x['时间']).endswith('00.0')]
-                logger.info(f'{key}-MACD计算-包含长度[{len(prices)}]')
                 if len(prices) == 0:
                     continue
                 macd_cross_result = indicator_prices.IndicatorPrices().macd_cross(prices)
@@ -121,22 +128,24 @@ class StrategiesMacd(CtpbeeApi):
 
     def update_datetime(self):
         now_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        self.ui_dict['日期时间'].config(text=now_datetime)
+        self.widgets['日期时间'].config(text=now_datetime)
         self.tkinter_root.update()
         return now_datetime
 
     def update_price(self, contract: str, price: str):
         text_key = f'contract_price_frame.{contract}'
-        self.ui_dict[text_key].config(text=price)
+        self.widgets[text_key].config(text=price)
 
     def update_position(self, contract: str, buy: str, sell: str):
         text_key = f'contract_position_frame.{contract}.买1'
-        self.ui_dict[text_key].config(text=buy)
+        self.widgets[text_key].config(text=buy)
         text_key = f'contract_position_frame.{contract}.卖1'
-        self.ui_dict[text_key].config(text=sell)
+        self.widgets[text_key].config(text=sell)
         self.tkinter_root.update()
 
     def update_detail(self, contract: str, detail: str):
+        text_key = f'contract_detail_frame.{contract}'
+        self.widgets[text_key].insert(tk.END, detail + '\n')
         if detail is None:
             detail = ''
         if '↑' not in detail and '↓' not in detail:
@@ -152,10 +161,11 @@ class StrategiesMacd(CtpbeeApi):
         if strategy is None:
             strategy = ''
         text_key = f'contract_strategy_frame.{contract}'
+        self.widgets[text_key].insert(tk.END, strategy + '\n')
         self.ui_dict[text_key].insert(tk.END, strategy + '\n')
         self.ui_dict[text_key].see(tk.END)
         self.tkinter_root.update()
 
     def clear_text(self, clear_text_key: str):
-        self.ui_dict[clear_text_key].delete('1.0', tk.END)
+        self.widgets[clear_text_key].delete('1.0', tk.END)
         self.tkinter_root.update()

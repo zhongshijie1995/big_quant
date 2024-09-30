@@ -139,6 +139,8 @@ class StrategiesMacd(CtpbeeApi):
     def update_detail(self, contract: str, detail: str):
         if detail is None:
             detail = ''
+        if '↑' not in detail and '↓' not in detail:
+            return
         detail_type = {'↑': '多', '↓': '空'}.get(detail.split('-')[1])
         text_key = f'contract_detail_frame.{contract}.{detail_type}'
         # TODO 绘制多空能量柱

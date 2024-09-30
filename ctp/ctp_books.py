@@ -15,6 +15,8 @@ class CtpBooks:
         # 若账本不存在此合约，则新建账本
         if k not in self.books:
             self.books[k] = []
+            # TODO 拼接启动前的数据
+            pass
         # 若账本中已含有1条以上记录，则计算明细
         if len(self.books[k]) >= 1:
             l = self.query(k, -1, None)[0]

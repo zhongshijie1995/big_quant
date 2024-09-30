@@ -52,8 +52,12 @@ class StrategiesMacd(CtpbeeApi):
                 self.ui_dict[f'{price_frame}'].pack(side=tk.TOP, fill=tk.X)
                 # 明细
                 detail_frame = 'contract_detail_frame'
-                self.ui_dict[f'{detail_frame}.{contract}'] = tk.Text(self.ui_dict[tab], width=35, height=10)
-                self.ui_dict[f'{detail_frame}.{contract}'].pack(side=tk.TOP, fill=tk.X)
+                self.ui_dict[detail_frame] = tk.Frame(self.ui_dict[tab])
+                self.ui_dict[f'{detail_frame}.{contract}.多'] = tk.Text(self.ui_dict[detail_frame], width=17, height=10)
+                self.ui_dict[f'{detail_frame}.{contract}.多'].pack(side=tk.LEFT, fill=tk.X)
+                self.ui_dict[f'{detail_frame}.{contract}.空'] = tk.Text(self.ui_dict[detail_frame], width=17, height=10)
+                self.ui_dict[f'{detail_frame}.{contract}.空'].pack(side=tk.RIGHT, fill=tk.X)
+                self.ui_dict[f'{detail_frame}'].pack(side=tk.TOP, fill=tk.X)
                 # 策略提示
                 strategy_frame = 'contract_strategy_frame'
                 self.ui_dict[f'{strategy_frame}.{contract}'] = tk.Text(self.ui_dict[tab], width=35, height=10)
@@ -133,17 +137,19 @@ class StrategiesMacd(CtpbeeApi):
         self.tkinter_root.update()
 
     def update_detail(self, contract: str, detail: str):
-        text_key = f'contract_detail_frame.{contract}'
         if detail is None:
             detail = ''
-        self.ui_dict[text_key].insert(tk.END, detail + '\n')
+        detail_type = {'↑': '多', '↓': '空'}.get(detail.split('-')[1])
+        text_key = f'contract_detail_frame.{contract}.{detail_type}'
+        # TODO 绘制多空能量柱
+        self.ui_dict[text_key].insert(tk.END, f'{detail}\n')
         self.ui_dict[text_key].see(tk.END)
         self.tkinter_root.update()
 
     def update_strategy(self, contract: str, strategy: str):
-        text_key = f'contract_strategy_frame.{contract}'
         if strategy is None:
             strategy = ''
+        text_key = f'contract_strategy_frame.{contract}'
         self.ui_dict[text_key].insert(tk.END, strategy + '\n')
         self.ui_dict[text_key].see(tk.END)
         self.tkinter_root.update()

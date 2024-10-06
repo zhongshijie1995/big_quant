@@ -57,7 +57,6 @@ class StrategiesMacd(CtpbeeApi):
                 self.widgets[f'{f_detail}.{contract}.多'].pack(side=tk.LEFT, fill=tk.X)
                 self.widgets[f'{f_detail}.{contract}.空'] = tk.Text(self.widgets[f_detail], width=17, height=10)
                 self.widgets[f'{f_detail}.{contract}.空'].pack(side=tk.RIGHT, fill=tk.X)
-                
                 self.widgets[f'{f_detail}'].pack(side=tk.TOP, fill=tk.X)
                 # 策略提示
                 strategy_frame = 'contract_strategy_frame'

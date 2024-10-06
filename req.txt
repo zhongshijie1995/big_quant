@@ -3,4 +3,4 @@ pandas
 loguru
 apscheduler
 ctpbee
-pyecharts
+matplotlib

@@ -36,7 +36,7 @@ class StrategiesMacd(CtpbeeApi):
             self.widgets[notebook] = ttk.Notebook(self.tkinter_root)
             for contract in contracts:
                 # ------------ 创建页面 ------------
-                tab = 'contract_frame'
+                tab = f'contract_frame.{contract}'
                 self.widgets[tab] = tk.Frame(self.widgets[notebook])
                 # 现价
                 f_price = 'contract_price_frame'

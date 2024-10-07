@@ -1,6 +1,10 @@
 import os.path
+import traceback
 from datetime import datetime
 from os import mkdir
+from typing import List, Dict, Any
+
+from loguru import logger
 
 from comm import tool_classes
 
@@ -16,3 +20,17 @@ class ToolRecord:
         with open(file_path, 'a') as f:
             f.write(txt + '\n')
         return None
+
+    @staticmethod
+    def read_from_date_file(base_path: str = '_data', date_str: str = None) -> List[Dict[str, Any]]:
+        result = []
+        try:
+            if date_str is None:
+                date_str = datetime.now().strftime('%Y%m%d')
+            with open(os.path.join(base_path, f'{date_str}.txt'), 'r') as f:
+                for line in f.readlines():
+                    result.append(eval(line.strip()))
+        except:
+            traceback.print_exc()
+            logger.info(f'未找到历史数据{date_str}')
+        return result

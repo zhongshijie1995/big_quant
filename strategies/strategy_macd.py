@@ -15,11 +15,12 @@ from indicator import indicator_prices
 class StrategiesMacd(CtpbeeApi):
     def __init__(self, contracts: List[str], with_tkinter: bool = False):
         super().__init__(self.__class__.__name__)
-        # 接受合约
+        # 接收合约
         if contracts is None:
             contracts = []
-        self.with_tkinter = with_tkinter
         self.instrument_set = contracts
+        # 是否需要界面
+        self.with_tkinter = with_tkinter
         # 完成界面
         if with_tkinter:
             # 创建界面

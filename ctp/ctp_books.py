@@ -7,7 +7,7 @@ from ctp import ctp_tools
 @tool_classes.ToolClasses.singleton
 class CtpBooks:
 
-    def __init__(self, max_len: int = 3600):
+    def __init__(self, max_len: int = 2 * 60 * 60 * 8):
         self.max_len: int = max_len
         self.books: Dict[str, List[Dict[str, Any]]] = {}
 
@@ -16,7 +16,6 @@ class CtpBooks:
         if k not in self.books:
             self.books[k] = []
             # TODO 拼接启动前的数据
-            pass
         # 若账本中已含有1条以上记录，则计算明细
         if len(self.books[k]) >= 1:
             l = self.query(k, -1, None)[0]

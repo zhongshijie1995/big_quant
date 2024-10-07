@@ -7,8 +7,6 @@ from typing import List
 from ctpbee import CtpbeeApi
 from ctpbee.constant import ContractData, TickData
 from loguru import logger
-from matplotlib import pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from ctp import ctp_tools, ctp_books
 from indicator import indicator_prices
@@ -55,10 +53,6 @@ class StrategiesMacd(CtpbeeApi):
                 # 明细
                 f_detail = 'contract_detail_frame'
                 self.widgets[f_detail] = tk.Frame(self.widgets[tab])
-                # 能量环
-                self.widgets[f'{f_detail}.{contract}.能量环'] = FigureCanvasTkAgg(self.buy_sell_power(),
-                                                                                  master=self.widgets[f_detail])
-                self.widgets[f'{f_detail}.{contract}.能量环'].get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
                 # 成交
                 self.widgets[f'{f_detail}.{contract}.多'] = tk.Text(self.widgets[f_detail], width=17, height=10)
                 self.widgets[f'{f_detail}.{contract}.多'].pack(side=tk.LEFT, fill=tk.X)
@@ -153,35 +147,7 @@ class StrategiesMacd(CtpbeeApi):
         text_key = f'contract_detail_frame.{contract}.{detail_type}'
         self.widgets[text_key].insert(tk.END, f'{detail}\n')
         self.widgets[text_key].see(tk.END)
-        # TODO 绘制多空能量柱
-
         self.tkinter_root.update()
-
-    @staticmethod
-    def buy_sell_power(
-            new_buy: int = 1,
-            change_buy: int = 1,
-            close_sell: int = 1,
-            close_buy: int = 1,
-            change_sell: int = 1,
-            new_sell: int = 1
-    ):
-        plt.rcParams["font.family"] = 'Arial Unicode MS'
-        fig, ax = plt.subplots()
-        labels = ['新多', '多换', '空平', '多平', '空换', '新空']
-        colors = ['#FF0000', '#FF6666', '#FF6600', '#66FFFF', '#66FF99', '#66FF00']
-        wedges, texts, autotexts = ax.pie(
-            [new_buy, change_buy, close_sell, close_buy, change_sell, new_sell],
-            labels=labels,
-            startangle=90,
-            autopct='%.2f%%',
-            wedgeprops={'width': 0.2},
-            labeldistance=1.15,
-            colors=colors
-        )
-        plt.setp(texts, size=12)
-        plt.setp(autotexts, size=12)
-        return fig
 
     def update_strategy(self, contract: str, strategy: str):
         if strategy is None:

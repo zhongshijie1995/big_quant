@@ -144,9 +144,10 @@ class StrategiesMacd(CtpbeeApi):
             return
         detail_type = {'↑': '多', '↓': '空'}.get(detail.split('-')[1])
         text_key = f'contract_detail_frame.{contract}.{detail_type}'
-        # TODO 绘制多空能量柱
         self.widgets[text_key].insert(tk.END, f'{detail}\n')
         self.widgets[text_key].see(tk.END)
+        # TODO 绘制多空能量柱
+
         self.tkinter_root.update()
 
     def update_strategy(self, contract: str, strategy: str):

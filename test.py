@@ -21,12 +21,12 @@ def buy_sell_power(
         labels=labels,
         startangle=90,
         autopct='%.2f%%',
-        wedgeprops={'width': 0.3},
-        labeldistance=1.15,
+        wedgeprops={'width': 0.2},
+        labeldistance=1.2,
         colors=colors
     )
-    plt.setp(texts, size=12)
-    plt.setp(autotexts, size=12)
+    plt.setp(texts, size=10)
+    plt.setp(autotexts, size=9)
     return fig
 
 

@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 
 from comm import tool_classes, tool_record
+from comm.tool_record import ToolRecord
 from ctp import ctp_tools
 
 
@@ -14,8 +15,13 @@ class CtpBooks:
     def append(self, k: str, v: Dict[str, Any]):
         # 若账本不存在此合约，则新建账本
         if k not in self.books:
+            # 新建账本
             self.books[k] = []
             # TODO 拼接启动前的数据
+            # 拼接今日之数据
+            today_tick_list = ToolRecord().read_from_date_file()
+            for tick in today_tick_list:
+                pass
         # 若账本中已含有1条以上记录，则计算明细
         if len(self.books[k]) >= 1:
             l = self.query(k, -1, None)[0]

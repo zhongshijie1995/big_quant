@@ -8,20 +8,19 @@ from ctp import ctp_tools
 @tool_classes.ToolClasses.singleton
 class CtpBooks:
 
-    def __init__(self, max_len: int = 2 * 60 * 60 * 8):
+    def __init__(self, max_len: int = 2 * 60 * 60 * 12):
         self.max_len: int = max_len
         self.books: Dict[str, List[Dict[str, Any]]] = {}
 
-    def append(self, k: str, v: Dict[str, Any]):
+    def append(self, k: str, v: Dict[str, Any], real_time: bool = True):
         # 若账本不存在此合约，则新建账本
         if k not in self.books:
             # 新建账本
             self.books[k] = []
-            # TODO 拼接启动前的数据
             # 拼接今日之数据
             today_tick_list = ToolRecord().read_from_date_file()
             for tick in today_tick_list:
-                pass
+                self.append(k, tick, real_time=False)
         # 若账本中已含有1条以上记录，则计算明细
         if len(self.books[k]) >= 1:
             l = self.query(k, -1, None)[0]
@@ -32,7 +31,8 @@ class CtpBooks:
         if len(self.books[k]) > self.max_len:
             self.books[k].pop(0)
         # 保存账本历史
-        tool_record.ToolRecord().append_to_date_file(str(v))
+        if real_time:
+            tool_record.ToolRecord().append_to_date_file(str(v))
 
     def query(self, k: str, start: int = None, end: int = None) -> List[Dict[str, Any]]:
         data = self.books.get(k)

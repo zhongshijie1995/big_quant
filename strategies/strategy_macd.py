@@ -54,14 +54,14 @@ class StrategiesMacd(CtpbeeApi):
                 # 明细
                 f_detail = 'contract_detail_frame'
                 self.widgets[f_detail] = tk.Frame(self.widgets[tab])
+                # 明细-汇总
+                self.widgets[f'{f_detail}.{contract}.汇总'] = tk.Label(self.widgets[tab], text='汇总')
+                self.widgets[f'{f_detail}.{contract}.汇总'].pack(side=tk.TOP, fill=tk.X)
                 # 明细-成交
                 self.widgets[f'{f_detail}.{contract}.多'] = tk.Text(self.widgets[f_detail], width=17, height=10)
                 self.widgets[f'{f_detail}.{contract}.多'].pack(side=tk.LEFT, fill=tk.X)
                 self.widgets[f'{f_detail}.{contract}.空'] = tk.Text(self.widgets[f_detail], width=17, height=10)
                 self.widgets[f'{f_detail}.{contract}.空'].pack(side=tk.RIGHT, fill=tk.X)
-                # 明细-汇总
-                self.widgets[f'{f_detail}.{contract}.汇总'] = tk.Label(self.widgets[f_detail], text='汇总')
-                self.widgets[f'{f_detail}.{contract}.汇总'].pack(side=tk.BOTTOM, fill=tk.X)
                 self.widgets[f'{f_detail}'].pack(side=tk.TOP, fill=tk.X)
                 # 策略提示
                 strategy_frame = 'contract_strategy_frame'
@@ -147,10 +147,12 @@ class StrategiesMacd(CtpbeeApi):
             return
         detail_type = {'↑': '多', '↓': '空'}.get(detail.split('-')[1])
         text_key = f'contract_detail_frame.{contract}.{detail_type}'
+        # 明细-汇总
+        detail_submit_str = '\n'.join([f'{k}:{v}' for k, v in ctp_books.CtpBooks().get_detail(contract).items()])
+        self.widgets[f'contract_detail_frame.{contract}.汇总'].config(text=detail_submit_str)
+        # 明细-成交
         self.widgets[text_key].insert(tk.END, f'{detail}\n')
         self.widgets[text_key].see(tk.END)
-        self.widgets[f'contract_detail_frame.{contract}.汇总'].config(
-            text=str(ctp_books.CtpBooks().get_detail(contract)))
         self.tkinter_root.update()
 
     def update_strategy(self, contract: str, strategy: str):

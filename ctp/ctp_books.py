@@ -1,5 +1,7 @@
 from typing import List, Dict, Any
 
+from loguru import logger
+
 from comm import tool_classes, tool_record
 from comm.tool_record import ToolRecord
 from ctp import ctp_tools
@@ -19,8 +21,10 @@ class CtpBooks:
             self.books[k] = []
             # 拼接今日之数据
             today_tick_list = ToolRecord().read_from_date_file()
+            logger.info('---- 拼接今日之数据 start ----')
             for tick in today_tick_list:
                 self.append(k, tick, real_time=False)
+            logger.info('---- 拼接今日之数据 end----')
         # 若账本中已含有1条以上记录，则计算明细
         if len(self.books[k]) >= 1:
             l = self.query(k, -1, None)[0]

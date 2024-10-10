@@ -20,7 +20,7 @@ class CtpBooks:
         if k not in self.books:
             # 新建账本
             self.books[k] = []
-            self.detail[k] = {k: 0 for k in ['多换', '空换', '双开', '双平', '空平', '多平', '多开', '空开']}
+            self.detail[k] = {k: 0 for k in ['空开', '多平', '双开', '双平', '多换', '空换', '空平', '多开']}
             # 拼接今日之数据
             today_tick_list = ToolRecord().read_from_date_file()
             logger.info('---- 拼接今日之数据 start ----')

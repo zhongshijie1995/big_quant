@@ -148,7 +148,11 @@ class StrategiesMacd(CtpbeeApi):
         detail_type = {'↑': '多', '↓': '空'}.get(detail.split('-')[1])
         text_key = f'contract_detail_frame.{contract}.{detail_type}'
         # 明细-汇总
-        detail_submit_str = '\n'.join([f'{k}:{v}' for k, v in ctp_books.CtpBooks().get_detail(contract).items()])
+        x = ctp_books.CtpBooks().get_detail(contract)
+        detail_submit_str = '\n'.join([f'【{k}】{v}' for k, v in {
+            '多开-多平(日内多持)': x['多开'] - x['多平'],
+            '空开-空平(日内空持)': x['空开'] - x['空平'],
+        }.items()])
         self.widgets[f'contract_detail_frame.{contract}.汇总'].config(text=detail_submit_str)
         # 明细-成交
         self.widgets[text_key].insert(tk.END, f'{detail}\n')

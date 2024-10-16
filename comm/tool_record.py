@@ -1,6 +1,6 @@
 import os.path
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 from os import mkdir
 from typing import List, Dict, Any
 
@@ -13,7 +13,10 @@ from comm import tool_classes
 class ToolRecord:
     @staticmethod
     def append_to_date_file(txt: str, base_path: str = '_data') -> None:
-        date_str = datetime.now().strftime('%Y%m%d')
+        now = datetime.now()
+        if datetime.now().strftime('%H:%M:%S') > '20:00:00':
+            now = now + timedelta(days=1)
+        date_str = now.strftime('%Y%m%d')
         if not os.path.exists(base_path):
             os, mkdir(base_path)
         file_path = os.path.join(base_path, f'{date_str}.txt')

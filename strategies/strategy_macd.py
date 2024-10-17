@@ -79,6 +79,8 @@ class StrategiesMacd(CtpbeeApi):
             self.action.subscribe(contract.local_symbol)
 
     def on_tick(self, tick: TickData) -> None:
+        if datetime.now().strftime('%H:%M:%S') < '21:00:00':
+            return None
         try:
             # 解析Tick数据
             data = ctp_tools.CtpTools().parse_tick(tick)
@@ -95,7 +97,6 @@ class StrategiesMacd(CtpbeeApi):
             self.update_price(data["代码"], msg.get('最新价'))
             self.update_position(data["代码"], msg.get('买1'), msg.get('卖1'))
             self.update_detail(data["代码"], msg.get('明细'))
-
         except Exception as e:
             logger.error(f'{e}-[{traceback.format_exc()}]')
 

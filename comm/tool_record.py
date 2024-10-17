@@ -14,7 +14,7 @@ class ToolRecord:
     @staticmethod
     def append_to_date_file(txt: str, base_path: str = '_data') -> None:
         now = datetime.now()
-        if datetime.now().strftime('%H:%M:%S') > '20:00:00':
+        if datetime.now().strftime('%H:%M:%S') > '21:00:00':
             now = now + timedelta(days=1)
         date_str = now.strftime('%Y%m%d')
         if not os.path.exists(base_path):
@@ -34,6 +34,5 @@ class ToolRecord:
                 for line in f.readlines():
                     result.append(eval(line.strip()))
         except:
-            traceback.print_exc()
             logger.info(f'未找到历史数据{date_str}')
         return result

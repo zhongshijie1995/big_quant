@@ -1,5 +1,4 @@
 import os.path
-import traceback
 from datetime import datetime, timedelta
 from os import mkdir
 from typing import List, Dict, Any
@@ -36,3 +35,7 @@ class ToolRecord:
         except:
             logger.info(f'未找到历史数据{date_str}')
         return result
+
+    @staticmethod
+    def append_to_sqlite(txt: str):
+        pass

@@ -1,5 +1,4 @@
 import traceback
-from datetime import datetime
 from typing import Dict, Any, Union
 
 from ctpbee.constant import TickData, BarData, OrderData, TradeData, PositionData, ContractData

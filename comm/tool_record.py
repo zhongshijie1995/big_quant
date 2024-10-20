@@ -37,5 +37,23 @@ class ToolRecord:
         return result
 
     @staticmethod
+    def init_sqlite():
+        db_name = 'main.db'
+        sql = """
+        create table if not exists TickData(
+            datetime text,
+            symbol text,
+            exchange text,
+            name text,
+            volume integer,
+            last_price integer,
+            last_volume float,
+            limit_up float,
+            limit_down float,
+            open_interest integer,
+        )
+        """
+
+    @staticmethod
     def append_to_sqlite(txt: str):
         pass

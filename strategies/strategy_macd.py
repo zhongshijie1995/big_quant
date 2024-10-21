@@ -8,6 +8,7 @@ from ctpbee import CtpbeeApi
 from ctpbee.constant import ContractData, TickData
 from loguru import logger
 
+from comm.tool_record import ToolRecord
 from ctp import ctp_tools, ctp_books
 from indicator import indicator_prices
 
@@ -15,6 +16,8 @@ from indicator import indicator_prices
 class StrategiesMacd(CtpbeeApi):
     def __init__(self, contracts: List[str], with_tkinter: bool = False):
         super().__init__(self.__class__.__name__)
+        # 初始化数据库
+        ToolRecord().init_sqlite()
         # 接收合约
         if contracts is None:
             contracts = []

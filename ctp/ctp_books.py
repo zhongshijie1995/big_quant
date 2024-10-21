@@ -44,7 +44,8 @@ class CtpBooks:
             self.books[k].pop(0)
         # 保存账本历史
         if real_time:
-            tool_record.ToolRecord().append_to_date_file(str(v))
+            # tool_record.ToolRecord().append_to_date_file(str(v))
+            tool_record.ToolRecord().append_to_sqlite(v)
 
     def query(self, k: str, start: int = None, end: int = None) -> List[Dict[str, Any]]:
         data = self.books.get(k)

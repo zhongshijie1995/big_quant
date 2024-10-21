@@ -12,7 +12,7 @@ class ToolSqlite:
 
     def get_conn(self, db_name: str) -> sqlite3.Connection:
         if db_name not in self.conn_dict:
-            self.conn_dict[db_name] = sqlite3.connect(db_name)
+            self.conn_dict[db_name] = sqlite3.connect(db_name, check_same_thread=False)
         return self.conn_dict.get(db_name)
 
     def get_cursor(self, db_name: str) -> (sqlite3.Connection, sqlite3.Cursor):

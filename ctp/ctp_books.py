@@ -22,7 +22,6 @@ class CtpBooks:
             self.books[k] = []
             self.detail[k] = {k: 0 for k in ['空开', '多平', '双开', '双平', '多换', '空换', '空平', '多开']}
             # 拼接今日之数据
-            # today_tick_list = ToolRecord().read_from_date_file()
             today_tick_list = ToolRecord().read_from_sqlite()
             logger.info('---- 拼接今日之数据 start ----')
             for tick in today_tick_list:
@@ -45,7 +44,6 @@ class CtpBooks:
             self.books[k].pop(0)
         # 保存账本历史
         if real_time:
-            # tool_record.ToolRecord().append_to_date_file(str(v))
             tool_record.ToolRecord().append_to_sqlite(v)
 
     def query(self, k: str, start: int = None, end: int = None) -> List[Dict[str, Any]]:

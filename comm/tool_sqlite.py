@@ -26,7 +26,8 @@ class ToolSqlite:
         conn.commit()
         return None
 
-    def query(self, db_name: str, sql: str) -> List[Any]:
+    def query(self, db_name: str, sql: str) -> (List[str], List[Any]):
         conn, cursor = self.get_cursor(db_name)
         cursor.execute(sql)
-        return cursor.fetchall()
+        cols = [col[0] for col in cursor.description]
+        return cols, cursor.fetchall()

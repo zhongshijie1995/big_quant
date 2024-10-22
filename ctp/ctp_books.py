@@ -22,7 +22,8 @@ class CtpBooks:
             self.books[k] = []
             self.detail[k] = {k: 0 for k in ['空开', '多平', '双开', '双平', '多换', '空换', '空平', '多开']}
             # 拼接今日之数据
-            today_tick_list = ToolRecord().read_from_date_file()
+            # today_tick_list = ToolRecord().read_from_date_file()
+            today_tick_list = ToolRecord().read_from_sqlite()
             logger.info('---- 拼接今日之数据 start ----')
             for tick in today_tick_list:
                 if tick['代码'] == k:

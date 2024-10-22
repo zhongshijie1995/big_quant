@@ -102,11 +102,12 @@ class ToolRecord:
     @staticmethod
     def read_from_sqlite(date_str: str = None) -> List[Dict[str, Any]]:
         if date_str is None:
-            date_str = datetime.now().strftime('%Y%m%d')
+            date_str = datetime.now().strftime('%Y-%m-%d')
         db_name = '_data/main.db'
         sql = f"""
         select * from TickData where substring(时间, 1, 10) == '{date_str}';
         """
+        print(sql)
         result = []
         cols, rows = ToolSqlite().query(db_name, sql)
         for row in rows:

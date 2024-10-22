@@ -107,7 +107,6 @@ class ToolRecord:
         sql = f"""
         select * from TickData where substring(时间, 1, 10) == '{date_str}';
         """
-        print(sql)
         result = []
         cols, rows = ToolSqlite().query(db_name, sql)
         for row in rows:

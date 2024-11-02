@@ -5,7 +5,7 @@ from ctpbee.constant import TickData, BarData, OrderData, TradeData, PositionDat
 from loguru import logger
 
 from comm import tool_classes
-from ctp import ctp_books
+from future_ctp import ctp_books
 
 
 @tool_classes.ToolClasses.singleton

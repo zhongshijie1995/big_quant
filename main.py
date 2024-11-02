@@ -1,7 +1,7 @@
 from ctpbee import CtpBee, CtpbeeApi
 
-from actions.action_base import ActionBase
-from strategies.strategy_macd import StrategiesMacd
+from future_ctp.action_base import ActionBase
+from future_ctp.strategy_macd import StrategiesMacd
 
 
 def create_ctpbee_app(act_config_path: str, strategy: CtpbeeApi) -> CtpBee:
@@ -17,9 +17,9 @@ def create_ctpbee_app(act_config_path: str, strategy: CtpbeeApi) -> CtpBee:
 
 if __name__ == '__main__':
     # 账户信息配置文件
-    act_config_path = './config/accounts/act_simnow_1.json'
+    act_config_path = 'future_ctp/act_simnow_2.json'
     # 自选信息配置文件
-    contract_path = './config/contracts/fav.txt'
+    contract_path = 'future_ctp/contracts_fav.txt'
     with open(contract_path, 'r') as f:
         contracts = [x.strip() for x in f.readlines() if not x.startswith('#')]
     # 策略配置代码

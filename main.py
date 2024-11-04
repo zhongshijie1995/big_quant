@@ -17,7 +17,7 @@ def create_ctpbee_app(act_config_path: str, strategy: CtpbeeApi) -> CtpBee:
 
 if __name__ == '__main__':
     # 账户信息配置文件
-    act_config_path = 'future_ctp/act_simnow_2.json'
+    act_config_path = 'future_ctp/act_simnow_1.json'
     # 自选信息配置文件
     contract_path = 'future_ctp/contracts_fav.txt'
     with open(contract_path, 'r') as f:

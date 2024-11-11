@@ -84,6 +84,9 @@ class StrategiesMacd(CtpbeeApi):
         try:
             # 解析Tick数据
             data = ctp_tools.CtpTools().parse_tick(tick)
+            if data is None:
+                logger.info('未开盘...')
+                return None
             # 打印报价
             price_msg = ctp_books.CtpBooks().query(data['代码'], -1)[0]
             msg = {
@@ -151,8 +154,12 @@ class StrategiesMacd(CtpbeeApi):
         # 明细-汇总
         x = ctp_books.CtpBooks().get_detail(contract)
         detail_submit_str = '\n'.join([f'【{k}】{v}' for k, v in {
-            '多开-多平(日内多持)': x['多开'] - x['多平'],
-            '空开-空平(日内空持)': x['空开'] - x['空平'],
+            '多开': x['多开'],
+            '空平': x['空平'],
+            '日内新多': x['多开'] - x['多平'],
+            '日内新空': x['空开'] - x['空平'],
+            '多平': x['多平'],
+            '空开': x['空开'],
         }.items()])
         self.widgets[f'contract_detail_frame.{contract}.汇总'].config(text=detail_submit_str)
         # 明细-成交

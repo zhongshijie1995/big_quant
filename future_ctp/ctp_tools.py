@@ -1,5 +1,5 @@
 import traceback
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Optional
 
 from ctpbee.constant import TickData, BarData, OrderData, TradeData, PositionData, ContractData
 from loguru import logger
@@ -191,8 +191,10 @@ class CtpTools:
         return result
 
     @staticmethod
-    def parse_tick(tick: TickData) -> Dict:
+    def parse_tick(tick: TickData):
         data = CtpTools().obj_to_dict(tick)
         data = {k: v for k, v in data.items() if v is not None}
+        if data['买价1'] == 1.7976931348623157e+308 or data['卖价1'] == 1.7976931348623157e+308:
+            return None
         ctp_books.CtpBooks().append(data['代码'], data)
         return data

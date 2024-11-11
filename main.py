@@ -25,7 +25,8 @@ if __name__ == '__main__':
     # 策略配置代码
     strategy = StrategiesMacd(contracts, True)
     # 启动服务
-    create_ctpbee_app(act_config_path, strategy).start()
+    app = create_ctpbee_app(act_config_path, strategy)
+    app.start()
     # 显示界面
     if strategy.with_tkinter:
         strategy.tkinter_root.mainloop()

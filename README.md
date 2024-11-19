@@ -25,7 +25,7 @@ pip install -r req.txt
 ### 3. 运行主程序
 
 ```shell
-python main.py
+python big_quant.py
 ```
 
 ## 二、参考地址

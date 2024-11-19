@@ -41,6 +41,7 @@ def need_run() -> bool:
 
 
 if __name__ == '__main__':
+    # 检查是否需要启动
     if not need_run():
         logger.info(f'交易时间无需启动')
         exit()

@@ -2,6 +2,7 @@ import datetime
 
 import chinese_calendar
 from ctpbee import CtpBee, CtpbeeApi
+from loguru import logger
 
 from future_ctp.action_base import ActionBase
 from future_ctp.strategy_macd import StrategiesMacd
@@ -21,6 +22,7 @@ def create_ctpbee_app(act_config_path: str, strategy: CtpbeeApi) -> CtpBee:
 def need_run() -> bool:
     # 获取当前时间
     now = datetime.datetime.now()
+    logger.info(f'启动时间[{now}]')
     # 1.交易时间必须是工作日
     if chinese_calendar.is_workday(now):
         # 1.1 今日工作日，有日盘
@@ -40,6 +42,7 @@ def need_run() -> bool:
 
 if __name__ == '__main__':
     if not need_run():
+        logger.info(f'交易时间无需启动')
         exit()
     # 账户信息配置文件
     act_config_path = 'future_ctp/act_simnow_1.json'

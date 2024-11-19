@@ -4,3 +4,4 @@ loguru
 apscheduler
 ctpbee
 matplotlib
+chinesecalendar

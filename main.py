@@ -3,7 +3,8 @@ import time
 
 open_time_list = [
     ('08:55', '15:05'),
-    ('20:55', '02:05')
+    ('20:55', '23:59'),
+    ('00:00', '02:05'),
 ]
 
 ui_process = None
@@ -13,7 +14,8 @@ try:
 
         cmd = 'stop'
         for open_time in open_time_list:
-            if open_time[0] < now_hhmm < open_time[1]:
+
+            if open_time[0] <= now_hhmm <= open_time[1]:
                 cmd = 'start'
         if cmd == 'start':
             try:

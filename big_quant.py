@@ -26,7 +26,7 @@ def need_run() -> bool:
     # 1.交易时间必须是工作日
     if chinese_calendar.is_workday(now):
         # 1.1 今日工作日，有日盘
-        if now.hour <= 15:
+        if 8 < now.hour <= 15:
             return True
         # 1.2 今日工作日，有2种情况有夜盘
         if now.hour > 15:
@@ -37,6 +37,7 @@ def need_run() -> bool:
             tomorrow_detail = chinese_calendar.get_holiday_detail(now + datetime.timedelta(days=1))
             if tomorrow_detail[0] and tomorrow_detail[1] is None:
                 return True
+    logger.info(f'放弃时间[{now}]')
     return False
 
 

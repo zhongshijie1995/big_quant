@@ -5,6 +5,7 @@ from ctpbee import CtpBee, CtpbeeApi
 from loguru import logger
 
 from future_ctp.action_base import ActionBase
+from future_ctp.strategy_collect import StrategiesCollect
 from future_ctp.strategy_macd import StrategiesMacd
 
 
@@ -53,10 +54,11 @@ if __name__ == '__main__':
     with open(contract_path, 'r') as f:
         contracts = [x.strip() for x in f.readlines() if not x.startswith('#')]
     # 策略配置代码
-    strategy = StrategiesMacd(contracts, True)
+    # strategy = StrategiesMacd(contracts, True)
+    strategy = StrategiesCollect()
     # 启动服务
     app = create_ctpbee_app(act_config_path, strategy)
     app.start()
-    # 显示界面
-    if strategy.with_tkinter:
-        strategy.tkinter_root.mainloop()
+    # # 显示界面
+    # if strategy.with_tkinter:
+    #     strategy.tkinter_root.mainloop()

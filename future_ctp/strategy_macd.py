@@ -75,6 +75,7 @@ class StrategiesMacd(CtpbeeApi):
 
     def on_contract(self, contract: ContractData):
         data = ctp_tools.CtpTools().obj_to_dict(contract)
+
         contract_name = data.get('合约名称')
         if contract_name in self.instrument_set:
             logger.info(f'订阅[{contract_name}]-[{contract.local_symbol}]')

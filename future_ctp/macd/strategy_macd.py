@@ -5,11 +5,12 @@ from tkinter import ttk
 from typing import List
 
 from ctpbee import CtpbeeApi
-from future_ctp import indicator_prices, ctp_tools, ctp_books
 from ctpbee.constant import ContractData, TickData
 from loguru import logger
 
-from comm.tool_record import ToolRecord
+from future_ctp import ctp_tools, ctp_books
+from future_ctp.ctp_record import ToolRecord
+from future_ctp.macd import indicator_prices
 
 
 class StrategiesMacd(CtpbeeApi):

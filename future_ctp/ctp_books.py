@@ -2,9 +2,9 @@ from typing import List, Dict, Any
 
 from loguru import logger
 
-from comm import tool_classes, tool_record
-from comm.tool_record import ToolRecord
-from future_ctp import ctp_tools
+from comm import tool_classes
+from future_ctp import ctp_tools, ctp_record
+from future_ctp.ctp_record import ToolRecord
 
 
 @tool_classes.ToolClasses.singleton
@@ -44,7 +44,7 @@ class CtpBooks:
             self.books[k].pop(0)
         # 保存账本历史
         if real_time:
-            tool_record.ToolRecord().append_to_sqlite(v)
+            ctp_record.ToolRecord().append_to_sqlite(v)
 
     def query(self, k: str, start: int = None, end: int = None) -> List[Dict[str, Any]]:
         data = self.books.get(k)

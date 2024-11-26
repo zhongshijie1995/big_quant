@@ -1,4 +1,0 @@
-55 20 * * * /Users/zhongshijie/Desktop/01-Projects/big_quant/start.sh
-05 2 * * * /Users/zhongshijie/Desktop/01-Projects/big_quant/stop.sh
-55 8 * * * /Users/zhongshijie/Desktop/01-Projects/big_quant/start.sh
-05 15 * * * /Users/zhongshijie/Desktop/01-Projects/big_quant/stop.sh

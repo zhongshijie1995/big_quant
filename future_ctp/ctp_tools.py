@@ -1,6 +1,5 @@
-import datetime
 import traceback
-from typing import Dict, Any, Union, Optional
+from typing import Dict, Any, Union
 
 from ctpbee.constant import TickData, BarData, OrderData, TradeData, PositionData, ContractData
 from loguru import logger
@@ -121,6 +120,13 @@ class CtpTools:
                 p_dict[key_name] = p_dict[key_name].strftime('%Y-%m-%d %H:%M:%S.%f')[:-5]
             if key_name == '交易所':
                 p_dict[key_name] = p_dict[key_name].value
+            # ---- ContractData ----
+            if key_name == '到期日':
+                p_dict[key_name] = [x.strftime('%Y-%m-%d') for x in p_dict[key_name]] if p_dict[key_name] else []
+            if key_name == '产品类型':
+                p_dict[key_name] = p_dict[key_name].value
+            if key_name == '期权类型':
+                p_dict[key_name] = [x.value for x in p_dict[key_name]] if p_dict[key_name] else []
         except:
             logger.error(traceback.format_exc())
             p_dict[key_name] = None

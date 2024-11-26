@@ -204,4 +204,14 @@ class CtpTools:
         if data['买价1'] == 1.7976931348623157e+308 or data['卖价1'] == 1.7976931348623157e+308:
             return None
         ctp_books.CtpBooks().append(data['代码'], data)
+        # try:
+        #     for price_key in data.keys():
+        #         if '价' in price_key:
+        #             if data[price_key] == 1.7976931348623157e+308:
+        #                 return None
+        #     if data['买价1'] == 1.7976931348623157e+308 or data['卖价1'] == 1.7976931348623157e+308:
+        #         return None
+        # except:
+        #     pass
+        # ctp_books.CtpBooks().append(data['代码'], data)
         return data

@@ -5,3 +5,4 @@ apscheduler
 ctpbee
 matplotlib
 chinesecalendar
+efinance

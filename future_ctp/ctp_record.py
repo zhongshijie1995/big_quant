@@ -114,3 +114,19 @@ class ToolRecord:
             result.append(tmp_row)
         return result
 
+    @staticmethod
+    def export_and_clear_yesterday_from_sqlite(date_str: str = None) -> None:
+        if date_str is None:
+            date_str = (datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d')
+        db_name = '_data/main.db'
+        # 导出数据
+        sql = f"""
+        select * from TickData where substring(时间, 1, 10) == '{date_str}';
+        """
+        file_path = f'_data/{date_str}.csv'
+        ToolSqlite().export(db_name, sql, file_path)
+        # 清理数据
+        sql = f"""
+        delete from TickData where substring(时间, 1, 10) == '{date_str}';
+        """
+        ToolSqlite().exec(db_name, sql)

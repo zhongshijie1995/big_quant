@@ -16,6 +16,8 @@ class StrategiesCollect(CtpbeeApi):
         self.contracts = self.pick_main_contract()
         # 初始化数据库
         ctp_record.ToolRecord().init_sqlite()
+        # 归档昨日数据
+        ctp_record.ToolRecord().export_and_clear_yesterday_from_sqlite()
 
     @staticmethod
     def pick_main_contract():

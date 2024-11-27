@@ -1,6 +1,8 @@
 import sqlite3
 from typing import List, Any
 
+import pandas as pd
+
 from comm import tool_classes
 
 
@@ -31,3 +33,13 @@ class ToolSqlite:
         cursor.execute(sql)
         cols = [col[0] for col in cursor.description]
         return cols, cursor.fetchall()
+
+    def export(self, db_name: str, sql: str, filename: str) -> None:
+        conn, cursor = self.get_cursor(db_name)
+        cursor.execute(sql)
+        cols = [col[0] for col in cursor.description]
+        data = cursor.fetchall()
+        if len(data) == 0:
+            return None
+        pd.DataFrame(data, columns=cols).to_csv(filename, index=False)
+        return None

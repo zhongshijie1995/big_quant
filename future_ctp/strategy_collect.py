@@ -1,47 +1,26 @@
+import os.path
 import traceback
 
-import efinance as ef
-import pandas as pd
 from ctpbee import CtpbeeApi
 from ctpbee.constant import ContractData, TickData
 from loguru import logger
 
-from future_ctp import ctp_tools, ctp_record
+from future_ctp import ctp_tools, ctp_record, contract_pick
 
 
 class StrategiesCollect(CtpbeeApi):
     def __init__(self):
         super().__init__(self.__class__.__name__)
         # 获取所有主力合约
-        self.contracts = self.pick_main_contract()
+        if not os.path.exists('_data/main_contract.list'):
+            contract_pick.pick_main_contract()
+        with open('_data/main_contract.list') as f:
+            self.contracts = eval(f.read())
+        logger.info(f'订阅合约[{len(self.contracts)}]个')
         # 初始化数据库
         ctp_record.ToolRecord().init_sqlite()
         # 归档昨日数据
         ctp_record.ToolRecord().export_and_clear_yesterday_from_sqlite()
-
-    @staticmethod
-    def pick_main_contract():
-        data = ef.futures.get_realtime_quotes()
-        df1 = data[
-            (data['期货名称'].str.contains('主')) &
-            (~ data['期货名称'].str.contains('次')) &
-            (data['涨跌幅'] != '-')
-            ]
-        df2 = data[
-            (~ data['期货名称'].str.contains('主')) &
-            (~ data['期货名称'].str.contains('次')) &
-            (~ data['期货名称'].str.contains('连续'))
-            ]
-        same_cols = ['最新价', '成交量', '成交额']
-        df = pd.merge(df1[same_cols], df2[['期货名称', '行情ID', '市场类型'] + same_cols], on=same_cols, how='left')
-        df = df[['行情ID', '市场类型', '期货名称']]
-        result = []
-        for row in df.itertuples():
-            if row[2] in ['大商所', '广期所', '上海能源期货交易所', '上期所', '郑商所']:
-                result.append(row[1].split('.')[1])
-            if row[2] in ['中金所']:
-                result.append(row[3])
-        return result
 
     def on_contract(self, contract: ContractData) -> None:
         if contract.symbol in self.contracts:

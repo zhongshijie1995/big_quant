@@ -1,6 +1,8 @@
 import subprocess
 import time
 
+from future_ctp import contract_pick
+
 open_time_list = [
     ('08:58', '15:02'),
     ('20:58', '23:59'),
@@ -30,6 +32,8 @@ try:
             try:
                 if ui_process is None:
                     continue
+                if now_hhmm.startswith('15'):
+                    contract_pick.pick_main_contract()
                 print(f'----- stop-[{now_hhmm}] 运行 -----')
                 ui_process.kill()
                 print(f'----- stop-[{now_hhmm}] 完毕 -----')

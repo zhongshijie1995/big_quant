@@ -19,8 +19,6 @@ class StrategiesCollect(CtpbeeApi):
         logger.info(f'订阅合约[{len(self.contracts)}]个')
         # 初始化数据库
         ctp_record.ToolRecord().init_sqlite()
-        # 归档昨日数据
-        ctp_record.ToolRecord().export_and_clear_yesterday_from_sqlite()
 
     def on_contract(self, contract: ContractData) -> None:
         if contract.symbol in self.contracts:

@@ -1,7 +1,7 @@
 import subprocess
 import time
 
-from future_ctp import contract_pick
+from future_ctp import contract_pick, ctp_record
 
 open_time_list = [
     ('08:58', '15:02'),
@@ -34,6 +34,7 @@ try:
                     continue
                 if now_hhmm.startswith('15'):
                     contract_pick.pick_main_contract()
+                    ctp_record.ToolRecord().export_and_clear_yesterday_from_sqlite()
                 print(f'----- stop-[{now_hhmm}] 运行 -----')
                 ui_process.kill()
                 print(f'----- stop-[{now_hhmm}] 完毕 -----')

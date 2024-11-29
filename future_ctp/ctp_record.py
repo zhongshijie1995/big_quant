@@ -121,12 +121,12 @@ class ToolRecord:
         db_name = '_data/main.db'
         # 导出数据
         sql = f"""
-        select * from TickData where substring(时间, 1, 10) < '{date_str}';
+        select * from TickData;
         """
         file_path = f'_data/{date_str}.csv'
         ToolSqlite().export(db_name, sql, file_path)
         # 清理数据
         sql = f"""
-        delete from TickData where substring(时间, 1, 10) < '{date_str}';
+        delete from TickData;
         """
         ToolSqlite().exec(db_name, sql)

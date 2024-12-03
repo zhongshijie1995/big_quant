@@ -35,6 +35,7 @@ try:
                 if now_hhmm.startswith('15'):
                     contract_pick.pick_main_contract()
                     ctp_record.ToolRecord().export_and_clear_yesterday_from_sqlite()
+                    time.sleep(300)
                 print(f'----- stop-[{now_hhmm}] 运行 -----')
                 ui_process.kill()
                 print(f'----- stop-[{now_hhmm}] 完毕 -----')

@@ -1,4 +1,5 @@
 import os.path
+import time
 from datetime import datetime, timedelta
 from os import mkdir
 from typing import List, Dict, Any
@@ -125,8 +126,10 @@ class ToolRecord:
         """
         file_path = f'_data/{date_str}.csv'
         ToolSqlite().export(db_name, sql, file_path)
+        time.sleep(300)
         # 清理数据
         sql = f"""
         delete from TickData;
         """
         ToolSqlite().exec(db_name, sql)
+        time.sleep(300)

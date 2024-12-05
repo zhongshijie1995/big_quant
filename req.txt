@@ -6,3 +6,5 @@ ctpbee
 matplotlib
 chinesecalendar
 efinance
+lightgbm
+scikit-learn

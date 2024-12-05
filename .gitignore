@@ -2,6 +2,7 @@
 *.iml
 
 venv
+.ipynb_checkpoints
 
 _data
 _log

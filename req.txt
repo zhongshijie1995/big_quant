@@ -1,10 +1,9 @@
-requests
-pandas
 loguru
-apscheduler
-ctpbee
-matplotlib
-chinesecalendar
+pandas
 efinance
+chinese_calendar
+git+https://github.com/ctpbee/ctpbee_api
+ctpbee
+ipykernel
 lightgbm
 scikit-learn

@@ -36,7 +36,7 @@ try:
                     contract_pick.pick_main_contract()
                     ctp_record.ToolRecord().export_and_clear_yesterday_from_sqlite()
                 print(f'----- stop-[{now_hhmm}] 运行 -----')
-                ui_process.kill()
+                ui_process.terminate()
                 print(f'----- stop-[{now_hhmm}] 完毕 -----')
             except Exception as e:
                 print(f'----- start-[{now_hhmm}]-异常[{e.__str__()}] -----')

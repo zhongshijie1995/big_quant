@@ -32,6 +32,7 @@ class StrategiesCollect(CtpbeeApi):
             if data is None:
                 logger.info('未开盘...')
                 return None
+            logger.info(data)
         except Exception as e:
             logger.error(f'{e}-[{traceback.format_exc()}]')
 

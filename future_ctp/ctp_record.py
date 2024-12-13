@@ -120,17 +120,18 @@ class ToolRecord:
         if date_str is None:
             date_str = (datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d')
         db_name = '_data/main.db'
-        time.sleep(300)
+        time.sleep(600)
         # 导出数据
         sql = f"""
         select * from TickData;
         """
         file_path = f'_data/{date_str}.csv'
         ToolSqlite().export(db_name, sql, file_path)
-        time.sleep(300)
+        time.sleep(600)
         # 清理数据
         sql = f"""
         delete from TickData;
         """
         ToolSqlite().exec(db_name, sql)
-        time.sleep(300)
+        time.sleep(600)
+        logger.info('清表完毕')

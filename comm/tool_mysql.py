@@ -1,5 +1,6 @@
+import pandas as pd
 import mysql.connector
-from typing import List, Any
+from typing import List, Any, Callable
 
 from comm import tool_classes
 
@@ -61,3 +62,22 @@ class ToolMysql:
         cursor.execute(sql)
         cols = [col[0] for col in cursor.description]
         return cols, cursor.fetchall()
+
+    def export(
+            self,
+            db_name: str,
+            sql: str,
+            host: str = None,
+            user: str = None,
+            passwd: str = None,
+            database: str = None,
+            file_name_func: Callable = None,
+    ):
+        conn, cursor = self.get_cursor(db_name)
+        cursor.execute(sql)
+        cols = [col[0] for col in cursor.description]
+        data = cursor.fetchall()
+        if len(data) == 0:
+            return None
+        pd.DataFrame(data, columns=cols).to_csv(file_name_func(data), index=False)
+        return None

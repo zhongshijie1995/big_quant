@@ -76,7 +76,7 @@ class ToolRecord:
         datas = []
         for k, v in d.items():
             cols.append(k)
-            datas.append(f'\'{v}\'')
+            datas.append(f'\'{v}\'' if v != 1.7976931348623157e+308 else 'null')
         sql = f"""
         insert into TickData ({','.join(cols)}) values ({','.join(datas)});
         """
@@ -98,22 +98,16 @@ class ToolRecord:
         return result
 
     @staticmethod
-    def export_and_clear_yesterday_from_sqlite(date_str: str = None) -> None:
-        if date_str is None:
-            date_str = (datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d')
+    def export_and_clear_whole_day() -> None:
         db_name = '_data/main.db'
-        time.sleep(600)
         # 导出数据
         sql = f"""
         select * from TickData;
         """
-        file_path = f'_data/{date_str}.csv'
-        ToolMysql().export(db_name, sql, file_path)
-        time.sleep(600)
+        ToolMysql().export(db_name, sql, file_name_func=lambda x : f'_data/{max([i[0] for i in x])[:10]}.csv')
         # 清理数据
         sql = f"""
         delete from TickData;
         """
         ToolMysql().exec(db_name, sql)
-        time.sleep(600)
         logger.info('清表完毕')

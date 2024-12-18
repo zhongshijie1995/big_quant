@@ -1,3 +1,14 @@
-from future_ctp.ctp_record import ToolRecord
+from comm import tool_mysql
+import pandas as pd
 
-ToolRecord().export_and_clear_yesterday_from_sqlite()
+s = pd.read_csv('_data/2024-12-17.csv')
+
+# result = tool_mysql.ToolMysql().query(
+#     'big_quant',
+#     'select * from TickData',
+#     host='localhost',
+#     user='big_quant',
+#     passwd='big_quant',
+#     database='big_quant'
+# )
+# print(result)

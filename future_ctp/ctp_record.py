@@ -7,36 +7,11 @@ from typing import List, Dict, Any
 from loguru import logger
 
 from comm import tool_classes
-from comm.tool_sqlite import ToolSqlite
+from comm.tool_mysql import ToolMysql
 
 
 @tool_classes.ToolClasses.singleton
 class ToolRecord:
-    @staticmethod
-    def append_to_date_file(txt: str, base_path: str = '_data') -> None:
-        now = datetime.now()
-        if datetime.now().strftime('%H:%M:%S') > '21:00:00':
-            now = now + timedelta(days=1)
-        date_str = now.strftime('%Y%m%d')
-        if not os.path.exists(base_path):
-            os, mkdir(base_path)
-        file_path = os.path.join(base_path, f'{date_str}.txt')
-        with open(file_path, 'a') as f:
-            f.write(txt + '\n')
-        return None
-
-    @staticmethod
-    def read_from_date_file(base_path: str = '_data', date_str: str = None) -> List[Dict[str, Any]]:
-        result = []
-        try:
-            if date_str is None:
-                date_str = datetime.now().strftime('%Y%m%d')
-            with open(os.path.join(base_path, f'{date_str}.txt'), 'r') as f:
-                for line in f.readlines():
-                    result.append(eval(line.strip()))
-        except:
-            logger.info(f'未找到历史数据{date_str}')
-        return result
 
     @staticmethod
     def init_sqlite():
@@ -85,7 +60,14 @@ class ToolRecord:
             明细 text
         );
         """
-        ToolSqlite().exec(db_name, sql)
+        ToolMysql().exec(
+            db_name,
+            sql,
+            host='localhost',
+            user='big_quant',
+            passwd='big_quant',
+            database='big_quant'
+        )
 
     @staticmethod
     def append_to_sqlite(d: Dict[str, Any]):
@@ -98,7 +80,7 @@ class ToolRecord:
         sql = f"""
         insert into TickData ({','.join(cols)}) values ({','.join(datas)});
         """
-        ToolSqlite().exec(db_name, sql)
+        ToolMysql().exec(db_name, sql)
 
     @staticmethod
     def read_from_sqlite(date_str: str = None) -> List[Dict[str, Any]]:
@@ -106,10 +88,10 @@ class ToolRecord:
             date_str = datetime.now().strftime('%Y-%m-%d')
         db_name = '_data/main.db'
         sql = f"""
-        select * from TickData where substring(时间, 1, 10) == '{date_str}';
+        select * from TickData where substring(时间, 1, 10) = '{date_str}';
         """
         result = []
-        cols, rows = ToolSqlite().query(db_name, sql)
+        cols, rows = ToolMysql().query(db_name, sql)
         for row in rows:
             tmp_row = dict(zip(cols, row))
             result.append(tmp_row)
@@ -126,12 +108,12 @@ class ToolRecord:
         select * from TickData;
         """
         file_path = f'_data/{date_str}.csv'
-        ToolSqlite().export(db_name, sql, file_path)
+        ToolMysql().export(db_name, sql, file_path)
         time.sleep(600)
         # 清理数据
         sql = f"""
         delete from TickData;
         """
-        ToolSqlite().exec(db_name, sql)
+        ToolMysql().exec(db_name, sql)
         time.sleep(600)
         logger.info('清表完毕')

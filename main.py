@@ -5,7 +5,7 @@ from future_ctp import contract_pick, ctp_record
 
 open_time_list = [
     ('08:58', '15:15'),
-    ('20:58', '23:59'),
+    ('20:50', '23:59'),
     ('00:00', '02:32'),
 ]
 

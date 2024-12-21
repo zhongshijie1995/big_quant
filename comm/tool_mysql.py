@@ -2,6 +2,8 @@ import pandas as pd
 import mysql.connector
 from typing import List, Any, Callable
 
+from loguru import logger
+
 from comm import tool_classes
 
 
@@ -21,7 +23,9 @@ class ToolMysql:
     ) -> mysql.connector.Connect:
         if db_name not in self.conn_dict:
             if None in [host, user, passwd, database]:
+                logger.info(f'db_name[{db_name}]不存在且没有提供连接参数')
                 return None
+            logger.info(f'创建连接db_name[{db_name}]')
             self.conn_dict[db_name] = mysql.connector.connect(
                 host=host,
                 user=user,

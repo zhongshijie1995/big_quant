@@ -39,7 +39,7 @@ try:
                     ctp_record.ToolRecord().init_sqlite()
                     ctp_record.ToolRecord().export_and_clear_whole_day()
                 print(f'----- stop-[{now_hhmm}] 运行 -----')
-                os.kill(ui_process.pid, signal.SIGTERM)
+                os.kill(ui_process.pid, signal.SIGKILL)
                 print(f'----- stop-[{now_hhmm}] 完毕 -----')
             except Exception as e:
                 print(f'----- start-[{now_hhmm}]-异常[{e.__str__()}] -----')
